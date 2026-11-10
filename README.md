@@ -23,4 +23,8 @@ Nejlépe funguje v Chromu nebo Edgi, nahrávej ve sluchátkách.
 Ukázková písnička je na beat **BATMAN** (Prod. HosseinAmin), ten tu není. Stáhni si ho u producenta na [BeatStars](https://beatstars.com/HosseinAmin) a nahraj ho ve studiu v záložce **Beat**.
 Zdarma je jen pro neziskové použití: v názvu tracku musí být **(Prod. HosseinAmin)** a vydat ho jde jen na SoundCloud bez monetizace.
 
+## Hotový text „Chemie“
+Chill jazz rap na beat **CHEMISTRY** (Prod. Xavien, [poslechnout na YouTube](https://www.youtube.com/watch?v=KnS9s9Pb97A)). Ve studiu: **Moje písničky → Hotový text na free beat → Chemie → Založit** a nahraj beat. Studio samo najde, kde naskočí bicí, a celý text usadí na takty.
+Beat má 120 BPM a je v **F moll** (v popisu na YouTube stojí Bm, ale noty v beatu jsou v F). Zdarma je jen pro neziskové použití a v názvu tracku musí být **(Prod. Xavien)**.
+
 U vlastních beatů vyplň v záložce **Píseň** producenta: přidá se do názvu exportu jako „(Prod. …)“.
