@@ -47,6 +47,7 @@ svg.i{width:18px;height:18px;fill:currentColor;flex:none}
 .logo b{font:900 23px/.9 var(--display);letter-spacing:.05em;text-transform:uppercase}
 .logo b i{font-style:normal;color:var(--sodium)}
 .logo span{font:600 10px/1 var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--steel)}
+#logoSong{cursor:pointer}#logoSong:hover{color:var(--sodium)}
 .tp{display:flex;align-items:center;gap:6px}
 .tb{width:38px;height:38px;display:grid;place-items:center;border-radius:11px;border:1px solid var(--rule);background:var(--panel-2);color:var(--chalk)}
 .tb:hover{border-color:var(--rule-2)}
@@ -136,6 +137,9 @@ svg.i{width:18px;height:18px;fill:currentColor;flex:none}
 .count small{display:block;margin-top:8px;font:600 11px/1 var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--steel)}
 .count.pop b{animation:pop .32s cubic-bezier(.2,.9,.3,1.3)}
 @keyframes pop{from{transform:scale(1.35);opacity:.2}to{transform:scale(1);opacity:1}}
+.empty-song{position:absolute;inset:0;z-index:4;display:grid;place-content:center;justify-items:center;gap:10px;padding:24px;text-align:center}
+.empty-song h3{margin:0;font:900 clamp(26px,3vw,40px)/1 var(--display);text-transform:uppercase}
+.empty-song p{margin:0;max-width:440px;color:var(--steel)}
 .guide{position:absolute;right:16px;bottom:16px;z-index:4;width:min(330px,calc(100% - 32px));padding:14px 16px;border-radius:14px;border:1px solid var(--rule-2);background:rgba(10,14,23,.94);font-size:13px;color:var(--steel)}
 .guide h3{margin:0 0 8px;font:800 15px/1 var(--display);letter-spacing:.14em;text-transform:uppercase;color:var(--chalk)}
 .guide ol{margin:0 0 10px;padding-left:18px;display:grid;gap:4px}
@@ -150,8 +154,34 @@ svg.i{width:18px;height:18px;fill:currentColor;flex:none}
 
 /* ---------- inspector ---------- */
 .insp{border-left:1px solid var(--rule);background:var(--panel);display:grid;grid-template-rows:auto minmax(0,1fr);min-height:0;min-width:0}
-.tabs{display:grid;grid-template-columns:repeat(5,1fr);gap:3px;padding:8px;border-bottom:1px solid var(--rule)}
-.tab{border:0;background:none;border-radius:8px;padding:8px 2px;font:700 12.5px/1 var(--display);letter-spacing:.1em;text-transform:uppercase;color:var(--steel)}
+.tabs{display:grid;grid-template-columns:repeat(6,1fr);gap:3px;padding:8px;border-bottom:1px solid var(--rule)}
+.tab{border:0;background:none;border-radius:8px;padding:8px 2px;font:700 12px/1 var(--display);letter-spacing:.08em;text-transform:uppercase;color:var(--steel)}
+.ta{width:100%;min-height:240px;resize:vertical;background:#05070C;border:1px solid var(--rule-2);border-radius:10px;padding:10px 12px;font:500 13.5px/1.55 var(--mono);color:var(--chalk)}
+.ta:focus{border-color:var(--sodium);outline:none}
+.inp{width:100%;background:var(--panel-3);border:1px solid var(--rule-2);border-radius:8px;padding:7px 9px;font-size:13px;grid-column:2/4}
+.inp.num{grid-column:2;width:100%}
+.btnrow{display:flex;flex-wrap:wrap;gap:5px;margin:6px 0}
+.btnrow button{border:1px solid var(--rule-2);background:var(--panel-3);border-radius:8px;padding:6px 9px;font:600 12px/1 var(--body);color:var(--chalk)}
+.btnrow button:hover{border-color:var(--steel)}
+.sgsec .mod-h input{width:64px;background:var(--panel-3);border:1px solid var(--rule-2);border-radius:7px;padding:4px 6px;font:600 12px/1 var(--mono);color:var(--chalk)}
+.sgline{display:grid;grid-template-columns:minmax(0,1fr) auto auto auto;align-items:center;gap:6px;padding:5px 0;border-top:1px solid var(--rule)}
+.sgline .t{font:600 13px/1.3 var(--body);overflow-wrap:anywhere}
+.sgline .c{font:500 11px/1 var(--mono);color:var(--fog);white-space:nowrap}
+.sgline.warn .c{color:var(--snare)}
+.sgline.tapd .c{color:var(--sodium)}
+.sgline button{border:1px solid var(--rule-2);background:var(--panel-3);border-radius:7px;padding:5px 7px;font:600 11px/1 var(--body);color:var(--chalk)}
+.sgline button.tapb{border-color:var(--sodium-a30);color:var(--sodium)}
+.sgline button:disabled{opacity:.35;cursor:default}
+.songlist{display:grid;gap:8px;margin-top:14px}
+.songcard{display:grid;grid-template-columns:minmax(0,1fr) auto auto;align-items:center;gap:8px;padding:11px 12px;border:1px solid var(--rule);border-radius:12px;background:var(--panel-2)}
+.songcard.on{border-color:var(--sodium)}
+.songcard b{font:800 17px/1.1 var(--display);letter-spacing:.04em;text-transform:uppercase}
+.songcard small{display:block;font:500 11.5px/1.4 var(--mono);color:var(--fog);margin-top:3px}
+.newsong{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:center}
+.newsong .inp{grid-column:auto}
+#nsFileName{display:block;margin:2px 0 10px;font:500 12px/1.45 var(--body);letter-spacing:0;text-transform:none;color:var(--steel)}
+.tapbox{position:absolute;left:50%;top:58px;z-index:6;transform:translateX(-50%);padding:10px 16px;border-radius:12px;background:rgba(7,10,17,.94);border:1px solid var(--sodium);text-align:center;font-size:13px;color:var(--steel)}
+.tapbox b{display:block;font:900 26px/1.1 var(--display);color:var(--sodium)}
 .tab:hover{color:var(--chalk);background:var(--panel-2)}
 .tab.on{background:var(--panel-3);color:var(--sodium)}
 .pane{overflow:auto;padding:14px 16px 24px;min-height:0}
@@ -293,6 +323,7 @@ kbd{display:inline-block;min-width:24px;text-align:center;font:600 11.5px/1 var(
   <symbol id="i-home" viewBox="0 0 24 24"><path d="M5 5h2.2v14H5zM19 5.6v12.8a.8.8 0 0 1-1.25.66L9.6 12.66a.8.8 0 0 1 0-1.32l8.15-6.4A.8.8 0 0 1 19 5.6z"/></symbol>
   <symbol id="i-loop" viewBox="0 0 24 24"><path d="M17 4l4 3.5-4 3.5V8.6H7.5a2.5 2.5 0 0 0-2.5 2.5V12H3v-.9A4.5 4.5 0 0 1 7.5 6.6H17zM7 20l-4-3.5L7 13v2.4h9.5a2.5 2.5 0 0 0 2.5-2.5V12h2v.9a4.5 4.5 0 0 1-4.5 4.5H7z"/></symbol>
   <symbol id="i-metro" viewBox="0 0 24 24"><path d="M9.5 3h5l4.5 18H5zm1.5 2-3.4 14h8.8l-1.7-7-3.2 3.3-1-1 3.7-3.8L13 5z"/></symbol>
+  <symbol id="i-list" viewBox="0 0 24 24"><path d="M4 5h3v3H4zm5 0h11v3H9zM4 10.5h3v3H4zm5 0h11v3H9zM4 16h3v3H4zm5 0h11v3H9z"/></symbol>
   <symbol id="i-note" viewBox="0 0 24 24"><path d="M9 4.5 20 2v13.2a3.3 3.3 0 1 1-2-3V6.6l-7 1.6v9.2A3.3 3.3 0 1 1 9 14.4z"/></symbol>
   <symbol id="i-down" viewBox="0 0 24 24"><path d="M12 15.5 6.5 10h3.8V3h3.4v7h3.8zM4 18h16v3H4z"/></symbol>
   <symbol id="i-up" viewBox="0 0 24 24"><path d="M12 3l5.5 5.5h-3.8V15h-3.4V8.5H6.5zM4 17h16v3H4z"/></symbol>
@@ -309,7 +340,8 @@ kbd{display:inline-block;min-width:24px;text-align:center;font:600 11.5px/1 var(
 
 <div id="app">
   <header class="bar">
-    <div class="logo"><b>Rap<i>Studio</i></b><span>Celej v černým</span></div>
+    <button class="tb" id="bSongs" type="button" title="Moje písničky" aria-label="Moje písničky"><svg class="i"><use href="#i-list"/></svg></button>
+    <div class="logo"><b>Rap<i>Studio</i></b><span id="logoSong" title="Moje písničky: přepnout nebo založit novou">Celej v černým</span></div>
     <div class="tp">
       <button class="tb" id="bHome" type="button" title="Na začátek (Home)" aria-label="Na začátek"><svg class="i"><use href="#i-home"/></svg></button>
       <button class="tb play" id="bPlay" type="button" title="Start / pauza (mezerník)" aria-label="Start"><svg class="i"><use href="#i-play" id="playUse"/></svg></button>
@@ -341,15 +373,22 @@ kbd{display:inline-block;min-width:24px;text-align:center;font:600 11.5px/1 var(
           <span class="stage-pos mono" id="stagePos"></span>
         </div>
         <div class="count" id="count" aria-hidden="true"></div>
+        <div class="tapbox" id="tapBox" hidden><b id="tapCount">0 / 0</b><span id="tapText">Ťukej mezerníkem na každou slabiku</span></div>
+        <div class="empty-song" id="emptySong" hidden>
+          <h3>Tahle písnička zatím nemá text</h3>
+          <p>Nahraj beat, napiš text po částech ([Refrén], [Sloka 1]…) a studio ho samo rozvrhne na beat.</p>
+          <button class="btn amber" type="button" id="emptyGo">Napsat text</button>
+        </div>
         <div class="guide" id="guide" hidden>
-          <h3>První nahrávka</h3>
+          <h3>Jak začít</h3>
           <ol>
+            <li><b>Vlastní písnička:</b> tlačítko <b>Vlastní písnička</b> dole (nebo ikona vlevo nahoře). Nahraješ svůj beat, napíšeš text a studio samo změří tempo a tóninu a rozvrhne text na beat.</li>
             <li><b>Nasaď sluchátka</b> (jinak mikrofon nahraje i beat).</li>
             <li>Zapni mikrofon a nahraj si beat (záložka <b>Beat</b>).</li>
             <li>Klikni na řádek nebo část, kde chceš začít.</li>
             <li>Zmáčkni <kbd>R</kbd>. Naběhne takt předehry a jedeš. <kbd>Mezerník</kbd> = stop.</li>
           </ol>
-          <div class="row"><button class="btn sm amber" type="button" id="gMic">Zapnout mikrofon</button><button class="btn sm" type="button" id="gBeat">Nahrát beat</button><button class="btn sm ghost" type="button" id="gClose">Zavřít</button></div>
+          <div class="row"><button class="btn sm amber" type="button" id="gSong">Vlastní písnička</button><button class="btn sm" type="button" id="gMic">Zapnout mikrofon</button><button class="btn sm" type="button" id="gBeat">Nahrát beat</button><button class="btn sm ghost" type="button" id="gClose">Zavřít</button></div>
         </div>
       </section>
       <section class="flow" aria-label="Flow pás">
@@ -360,12 +399,14 @@ kbd{display:inline-block;min-width:24px;text-align:center;font:600 11.5px/1 var(
 
     <aside class="insp">
       <nav class="tabs" role="tablist">
+        <button class="tab" type="button" data-tab="song">Píseň</button>
         <button class="tab on" type="button" data-tab="fx">Efekty</button>
         <button class="tab" type="button" data-tab="mix">Mix</button>
-        <button class="tab" type="button" data-tab="rec">Nahrávání</button>
+        <button class="tab" type="button" data-tab="rec">Nahrát</button>
         <button class="tab" type="button" data-tab="sec">Části</button>
         <button class="tab" type="button" data-tab="beat">Beat</button>
       </nav>
+      <div class="pane" id="pane-song" hidden></div>
       <div class="pane" id="pane-fx"></div>
       <div class="pane" id="pane-mix" hidden></div>
       <div class="pane" id="pane-rec" hidden>
@@ -413,7 +454,7 @@ kbd{display:inline-block;min-width:24px;text-align:center;font:600 11.5px/1 var(
       </div>
       <div class="pane" id="pane-beat" hidden>
         <h3>Beat</h3>
-        <p class="p">Bez souboru hraje <b>vodicí beat</b> (stejné tempo i stavba). Originál stáhni na <a href="https://beatstars.com/HosseinAmin" target="_blank" rel="noopener">BeatStars → HosseinAmin → BATMAN</a> a nahraj ho sem. Studio ho samo srovná s textem a zapamatuje si ho.</p>
+        <p class="p" id="beatHelp">Bez souboru hraje <b>vodicí beat</b> (stejné tempo i stavba). Originál stáhni na <a href="https://beatstars.com/HosseinAmin" target="_blank" rel="noopener">BeatStars → HosseinAmin → BATMAN</a> a nahraj ho sem. Studio ho samo srovná s textem a zapamatuje si ho.</p>
         <div class="drop" id="drop">
           <label class="btn amber" for="file"><svg class="i"><use href="#i-up"/></svg>Nahrát MP3 / WAV</label>
           <input id="file" type="file" accept="audio/*,.mp3,.wav,.m4a,.ogg" hidden>
@@ -429,7 +470,7 @@ kbd{display:inline-block;min-width:24px;text-align:center;font:600 11.5px/1 var(
         <p class="note" style="margin-top:12px">Beat je zdarma jen pro neziskové použití: v názvu tracku musí být <b>(Prod. HosseinAmin)</b> a vydat ho jde jen na SoundCloud bez monetizace. Na Spotify a další je potřeba licence.</p>
         <h3 style="margin-top:18px">Projekt</h3>
         <p class="p">Všechno se ukládá samo do prohlížeče na tomhle počítači.</p>
-        <button class="btn sm" type="button" id="newProj">Nový projekt (smazat všechny takes)</button>
+        <button class="btn sm" type="button" id="newProj">Smazat všechny takes v téhle písničce</button>
       </div>
     </aside>
   </main>
@@ -517,6 +558,23 @@ kbd{display:inline-block;min-width:24px;text-align:center;font:600 11.5px/1 var(
   </div>
 </div>
 
+<div class="modal" id="mSongs" hidden role="dialog" aria-modal="true" aria-labelledby="mSongsH">
+  <div class="mbox" style="width:min(640px,100%)">
+    <h2 id="mSongsH">Moje písničky <button class="ib" type="button" data-close aria-label="Zavřít">✕</button></h2>
+    <div class="opt"><span>Nová písnička</span>
+      <div class="newsong">
+        <input class="inp" id="nsName" type="text" placeholder="Název, třeba „Má milá“" maxlength="60">
+        <label class="btn" for="nsFile"><svg class="i"><use href="#i-up"/></svg>Beat</label>
+      </div>
+      <input id="nsFile" type="file" accept="audio/*,.mp3,.wav,.m4a,.ogg" hidden>
+      <span class="status" id="nsFileName">Beat (MP3 / WAV) můžeš přidat i později. Studio mu samo změří tempo, takty a tóninu.</span>
+      <button class="btn amber wide" type="button" id="nsCreate">Vytvořit písničku</button>
+    </div>
+    <div class="songlist" id="songList"></div>
+    <p class="note">Písničky a nahrávky se ukládají jen v tomhle prohlížeči na tomhle počítači.</p>
+  </div>
+</div>
+
 <div class="modal" id="mConfirm" hidden role="dialog" aria-modal="true">
   <div class="mbox" style="width:min(420px,100%)">
     <h2 id="cfH">Opravdu?</h2>
@@ -530,11 +588,18 @@ kbd{display:inline-block;min-width:24px;text-align:center;font:600 11.5px/1 var(
 (() => {
 'use strict';
 /* =====================================================================
-   1. BEAT GRID + LYRICS (measured from the YouTube upload of "BATMAN")
+   1. SONG MODEL: beat grid + lyrics. Every song has its own grid (tempo, first downbeat)
+      and sections of lines in rhythm notation. The demo "Celej v černým" is measured from BATMAN.
    ===================================================================== */
-const U = 0.1, BEAT = 0.4, BAR = 1.6, LINE = 3.2, LINE_U = 32, TOTAL_BARS = 87;
-const BAR0 = -0.0766, END_T = 138.9;
+let BPM = 150, BEAT = 0.4, BAR = 1.6, U = 0.1, LINE_BARS = 2, LINE_U = 32, LINE = 3.2, TOTAL_BARS = 87;
+let BAR0 = -0.0766, END_T = 138.9;
 const barT = n => BAR0 + (n - 1) * BAR;
+function setGrid(g) {
+  BPM = g.bpm; BEAT = 60 / BPM; BAR = 4 * BEAT; U = BEAT / 4;
+  LINE_BARS = g.lineBars || (BPM >= 115 ? 2 : 1); LINE_U = 16 * LINE_BARS; LINE = LINE_BARS * BAR;
+  BAR0 = g.bar0 || 0; END_T = g.end || END_T;
+  TOTAL_BARS = Math.max(1, Math.floor((END_T - BAR0) / BAR));
+}
 
 const HOOK = [
   'Ce-lej v_čer-ným,:6 je-du ven:4 .. (ven:4) ..',
@@ -560,7 +625,7 @@ const HOOK_SUNG = [
 /* Arrangement v2: your voice from the first seconds. Sung hook over the intro melody,
    verse 1 on the drop (0:33), rapped hook after it, then break, verse 2, hook 2, outro. */
 const LAYOUT_VERSION = 2;
-const SECTIONS = [
+const DEMO_SECTIONS = [
   { id: 'intro', name: 'Intro', kind: 'calm', bar: 4, lines: [
     '(jé:4) .. (čha-ve,:4) .. (jdem:4) .....'
   ]},
@@ -593,6 +658,10 @@ const SECTIONS = [
     '(mo-re:4) .............'
   ]}
 ];
+const DEMO_SONG = { name: 'Celej v černým', demo: true, producer: 'HosseinAmin', key: 'E:minor', grid: { bpm: 150, bar0: -0.0766, lineBars: 2, end: 138.9 }, sections: DEMO_SECTIONS };
+let SONG = DEMO_SONG, SECTIONS = [];
+const LINES = [], MEL = new Map();
+let NL = 0;
 function parse(src) {
   const toks = src.trim().split(/\s+/);
   let u = 0, ad = false;
@@ -618,26 +687,32 @@ function parse(src) {
   return { words, syl, units: u };
 }
 const plainOf = L => L.words.map(w => w.sep ? '–' : (w.open ? '(' : '') + w.s.map(k => L.syl[k].t).join('') + (w.close ? ')' : '')).join(' ');
-const LINES = [];
-SECTIONS.forEach((sec, si) => {
-  sec.first = LINES.length;
-  sec.lines.forEach((src, li) => {
-    const p = parse(src);
-    if (p.units !== LINE_U) console.warn('Řádek nemá 32 šestnáctin:', p.units, src);
-    const bar = sec.bar + li * 2;
-    let mainEnd = 0; p.syl.forEach(s => { if (!s.ad) mainEnd = Math.max(mainEnd, s.u0 + s.d); });
-    const fm = p.syl.find(s => !s.ad);
-    const L = { ...p, si, sec, bar, t0: barT(bar), mainEnd, firstU: fm ? fm.u0 : (p.syl[0] ? p.syl[0].u0 : 0) };
-    L.plain = plainOf(L);
-    LINES.push(L);
+const kindOf = name => /hook|refr|chorus/i.test(name) ? 'hook' : /slok|verse|vers/i.test(name) ? 'verse' : /break|bridge|most|pre/i.test(name) ? 'break' : 'calm';
+/* (re)build LINES / SECTIONS / guide melody from the current SONG + grid */
+function buildSong() {
+  setGrid(SONG.grid);
+  SECTIONS = SONG.sections;
+  LINES.length = 0; MEL.clear();
+  SECTIONS.forEach((sec, si) => {
+    sec.kind = sec.kind || kindOf(sec.name);
+    sec.first = LINES.length;
+    sec.lines.forEach((src, li) => {
+      const p = parse(src);
+      const bar = sec.bar + li * LINE_BARS;
+      let mainEnd = 0; p.syl.forEach(s => { if (!s.ad) mainEnd = Math.max(mainEnd, s.u0 + s.d); });
+      const fm = p.syl.find(s => !s.ad);
+      const L = { ...p, si, sec, li, bar, t0: barT(bar), mainEnd, firstU: fm ? fm.u0 : (p.syl[0] ? p.syl[0].u0 : 0), over: p.units > LINE_U };
+      L.plain = plainOf(L);
+      LINES.push(L);
+    });
+    sec.last = LINES.length - 1;
+    sec.t0 = barT(sec.bar); sec.t1 = barT(sec.bar + Math.max(1, sec.lines.length) * LINE_BARS);
   });
-  sec.last = LINES.length - 1;
-  sec.t0 = barT(sec.bar); sec.t1 = barT(sec.bar + sec.lines.length * 2);
-});
-const NL = LINES.length;
-/* guide melody: global sixteenth index -> note to play */
-const MEL = new Map();
-LINES.forEach(L => L.syl.forEach(s => { if (s.midi != null) MEL.set((L.bar - 1) * 16 + s.u0, { midi: s.midi, d: s.d, ad: s.ad }); }));
+  NL = LINES.length;
+  /* guide melody: global sixteenth index -> note to play */
+  LINES.forEach(L => L.syl.forEach(s => { if (s.midi != null) MEL.set((L.bar - 1) * 16 + s.u0, { midi: s.midi, d: s.d, ad: s.ad }); }));
+}
+buildSong();
 
 /* fingerprint of the beat (0.1 s frames) for auto-alignment of the user's MP3 */
 const REF_F = 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPhmjommlmqrmoqnnmppkjnnmmlmilhekkkmlnljlpmonoopmllkihgfjijmkjlnkjpqqssortrurvsvtstttqstwvquvutuuurpnppqrsqnqonpnopmnmkjnkmqormpqjponoommqoqppqnnponnpomoqnkllkmklnrrqpponmmopmmonnnnppojooonooroqplmlmnnmlnoonopooqprrqouousututtrqmiomnnliffiegfhf2z21y3wllmuy0z0w0u0uwsrqspsqonkfgdgccXUXVSau48-51111142qtsqttstrututt5-5034116-30117-50otrr30t0zss10r5-4134115-50111133qrupruqy0rux0vx-7z15112-7y113-74pptrx4r11y1z001-7z15112xuvwvtstvvrpssrsstuvwxvwyyxuttttutuvtppsusqprrsrstvwwuwyywustsstxvvwurstvvsruwy01yz100xyyzywuuutvvvwvspsutqqrstrwvuwwuxy0yutwtss99x111115tputtwquqsvqrvr99x1511199w111994rouqq4sy1wuw1ym99x1511199y111115wpuqqurv0xus0yr99x1511198x111-95spurr4t01z1y1011vspwtuu-9y2vKAA99x1wLAA99tB99tB9999999999z322325toutwxuz33314339903533399y322994trvqr4sx3zvw30r99z35333-8y111115qouprvqy0vvx0wo-9x15222vrpppomnsppmrrrqwtpqqotoyurpqstu75uv75rt75q75r7575uv75vw75z84v7475uv75ps75r75t7575uw75wy75z75t7575uv75rs76qyr01qu2wr10pq11t11q0101pp01ml01o01o0100st11tsvutnmnnn24twvvwwzrmolkpmonmpopqo24uvzxww24tvwv24ztjollxupvuoovum15yvyyww14yvwvwwzvmonkonoutpntuo05yvzxvw15yuwv050xkmnmwwpwuvuuuv15yvyyvw050uwwwwxymmonnonvvvvuvv05zuyyuv050uvvz51zvvvmsymvvkpuvpr51tw0vwv52twvwwwzmlpjkplsvopqvqm43sw0vww43rwwv43znjommzouwtwtvvvwwwwustvwvsvrupqpomnmolmjkmljjklmlkjkkklmonlmmiikkkjjmlljijjjjigklkjimmlprmliijkljihhihhfghfeefgggdcdcdcaZZZYYXWYXWVTXXWSSQPQPNLLOMIFG';
@@ -683,14 +758,14 @@ function confirmBox(title, text, yes) {
 /* =====================================================================
    3. PROJECT STATE + PRESETS
    ===================================================================== */
-const BASE_FX = { tune: { on: false, scale: 'Em', speed: 0.15, amount: 1 }, shift: 0, hp: { on: true, f: 100 }, tel: false, gate: true, deess: 0.35,
+const BASE_FX = { tune: { on: false, scale: 'song', speed: 0.15, amount: 1 }, shift: 0, hp: { on: true, f: 100 }, tel: false, gate: true, deess: 0.35,
   eq: { low: -2, mid: 3, air: 3 }, comp: { on: true, amt: 0.55 }, sat: 0.12, rev: { amt: 0.08, size: 'room' }, dly: { amt: 0.08, time: '1/8', fb: 0.25 }, vol: 0.9, pan: 0 };
 const mkFx = patch => { const f = clone(BASE_FX); for (const k in patch) { if (typeof patch[k] === 'object' && !Array.isArray(patch[k])) Object.assign(f[k], patch[k]); else f[k] = patch[k]; } return f; };
 const PRESETS = [
   { id: 'clean', name: 'Čistý', fx: mkFx({ hp: { f: 80 }, eq: { low: 0, mid: 1, air: 1 }, comp: { amt: 0.35 }, sat: 0, rev: { amt: 0.05 }, dly: { amt: 0 } }) },
   { id: 'drill', name: 'Drill vokál', fx: mkFx({ hp: { f: 110 }, eq: { low: -3, mid: 4, air: 3 }, comp: { amt: 0.68 }, sat: 0.18, rev: { amt: 0.07, size: 'room' }, dly: { amt: 0.1, time: '1/8', fb: 0.22 } }) },
-  { id: 'tune', name: 'Autotune trap', fx: mkFx({ tune: { on: true, scale: 'Em', speed: 0.12, amount: 1 }, hp: { f: 110 }, eq: { low: -2, mid: 3, air: 4 }, comp: { amt: 0.62 }, sat: 0.1, rev: { amt: 0.18, size: 'studio' }, dly: { amt: 0.14, time: '3/16', fb: 0.3 } }) },
-  { id: 'robot', name: 'Robot', fx: mkFx({ tune: { on: true, scale: 'Epent', speed: 0, amount: 1 }, hp: { f: 120 }, eq: { low: -3, mid: 4, air: 5 }, comp: { amt: 0.7 }, sat: 0.22, rev: { amt: 0.12, size: 'studio' }, dly: { amt: 0.12, time: '1/8', fb: 0.25 } }) },
+  { id: 'tune', name: 'Autotune trap', fx: mkFx({ tune: { on: true, scale: 'song', speed: 0.12, amount: 1 }, hp: { f: 110 }, eq: { low: -2, mid: 3, air: 4 }, comp: { amt: 0.62 }, sat: 0.1, rev: { amt: 0.18, size: 'studio' }, dly: { amt: 0.14, time: '3/16', fb: 0.3 } }) },
+  { id: 'robot', name: 'Robot', fx: mkFx({ tune: { on: true, scale: 'songpent', speed: 0, amount: 1 }, hp: { f: 120 }, eq: { low: -3, mid: 4, air: 5 }, comp: { amt: 0.7 }, sat: 0.22, rev: { amt: 0.12, size: 'studio' }, dly: { amt: 0.12, time: '1/8', fb: 0.25 } }) },
   { id: 'demon', name: 'Démon', fx: mkFx({ shift: -5, hp: { f: 60 }, eq: { low: 3, mid: 2, air: -2 }, comp: { amt: 0.7 }, sat: 0.35, rev: { amt: 0.22, size: 'hall' }, dly: { amt: 0.06 } }) },
   { id: 'chip', name: 'Chipmunk', fx: mkFx({ shift: 7, hp: { f: 160 }, eq: { low: -4, mid: 2, air: 2 }, comp: { amt: 0.5 }, sat: 0.05, rev: { amt: 0.08 }, dly: { amt: 0.05 } }) },
   { id: 'phone', name: 'Telefon', fx: mkFx({ tel: true, hp: { f: 200 }, eq: { low: -6, mid: 6, air: -3 }, comp: { amt: 0.75 }, sat: 0.45, rev: { amt: 0.04 }, dly: { amt: 0.06 } }) },
@@ -744,7 +819,8 @@ function redo() { if (!redoStack.length) return; undoStack.push(snapshot()); res
    ===================================================================== */
 const IDB = {
   db: null,
-  open() { return new Promise((res, rej) => { const r = indexedDB.open('rapstudio', 1); r.onupgradeneeded = () => { r.result.createObjectStore('kv'); r.result.createObjectStore('audio'); }; r.onsuccess = () => { this.db = r.result; res(); }; r.onerror = () => rej(r.error); }); },
+  // never hang the whole studio on storage: a blocked or stuck open gives up after 5 s and the studio runs without saving
+  open() { return new Promise((res, rej) => { const to = setTimeout(() => rej(new Error('IndexedDB open timeout')), 5000); const r = indexedDB.open('rapstudio', 1); r.onupgradeneeded = () => { r.result.createObjectStore('kv'); r.result.createObjectStore('audio'); }; r.onsuccess = () => { clearTimeout(to); this.db = r.result; this.db.onversionchange = () => { this.db.close(); this.db = null; }; res(); }; r.onerror = () => { clearTimeout(to); rej(r.error); }; }); },
   tx(store, mode, fn) { return new Promise((res, rej) => { if (!this.db) return res(null); const t = this.db.transaction(store, mode); const s = t.objectStore(store); let out; const r = fn(s); if (r) r.onsuccess = () => { out = r.result; }; t.oncomplete = () => res(out); t.onerror = () => rej(t.error); t.onabort = () => rej(t.error); }); },
   put(store, key, val) { return this.tx(store, 'readwrite', s => s.put(val, key)); },
   get(store, key) { return this.tx(store, 'readonly', s => s.get(key)); },
@@ -753,7 +829,20 @@ const IDB = {
 };
 let saveTimer = null;
 function saveSoon() { clearTimeout(saveTimer); saveTimer = setTimeout(saveNow, 600); }
-async function saveNow() { try { await IDB.put('kv', 'project', JSON.parse(JSON.stringify(project))); } catch (e) { console.error(e); } }
+/* every song is its own project: kv 'song:<id>', its beat in kv 'beat:<id>', the list in kv 'songs' */
+let SONG_INDEX = [];
+const songEntry = () => ({ id: project.id, name: SONG.name, updated: project.updated || Date.now(), bpm: Math.round(SONG.grid.bpm), beatName: beat.name || '', demo: !!SONG.demo, lines: NL, takes: project.tracks.reduce((a, t) => a + t.clips.length, 0) });
+async function saveNow() {
+  try {
+    project.updated = Date.now();
+    await IDB.put('kv', 'song:' + project.id, JSON.parse(JSON.stringify(project)));
+    const e = songEntry(), i = SONG_INDEX.findIndex(x => x.id === project.id);
+    if (i >= 0) SONG_INDEX[i] = e; else SONG_INDEX.push(e);
+    await IDB.put('kv', 'songs', SONG_INDEX);
+    await IDB.put('kv', 'current', project.id);
+  } catch (e) { console.error(e); }
+}
+const beatKey = () => 'beat:' + project.id;
 async function saveBuffer(id, buf) { try { await IDB.put('audio', id, { sr: buf.sampleRate, data: buf.getChannelData(0) }); } catch (e) { console.error(e); toast('Take se nepodařilo uložit na disk (málo místa?).', 'warn'); } }
 
 /* =====================================================================
@@ -797,7 +886,8 @@ function satCurve(a) {
   for (let i = 0; i < n; i++) { const X = (i / (n - 1) * 2 - 1) * 4; c[i] = Math.tanh(k * X) / k; }
   return (curveCache[key] = c);
 }
-const NOTE = { '1/8': 0.2, '3/16': 0.3, '1/4': 0.4, '1/2': 0.8 };
+const NOTE_BEATS = { '1/8': 0.5, '3/16': 0.75, '1/4': 1, '1/2': 2 };   // delay synced to the song tempo
+const noteSec = k => Math.min(1.99, (NOTE_BEATS[k] || 0.5) * BEAT);
 function bq(c, type, f, q) { const b = c.createBiquadFilter(); b.type = type; b.frequency.value = f; if (q) b.Q.value = q; return b; }
 function buildChain(c, fx, dest, live) {
   const n = { c };
@@ -835,7 +925,7 @@ function buildChain(c, fx, dest, live) {
     P(n.vol.gain, f.vol); P(n.pan.pan, f.pan);
     P(n.rSend.gain, f.rev.amt);
     if (n.size !== f.rev.size) { n.conv.buffer = getIR(c, f.rev.size); n.size = f.rev.size; }
-    P(n.dSend.gain, f.dly.amt); P(n.dl.delayTime, NOTE[f.dly.time] || 0.2); P(n.fb.gain, f.dly.fb);
+    P(n.dSend.gain, f.dly.amt); P(n.dl.delayTime, noteSec(f.dly.time)); P(n.fb.gain, f.dly.fb);
   };
   n.set(fx, true);
   return n;
@@ -852,7 +942,9 @@ function applyMix() {
 /* ---------- guide beat synth ---------- */
 function env(g, t, peak, dec) { g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(peak, t + 0.004); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.004 + dec); }
 function kick(t, v = 0.9) { const o = ctx.createOscillator(), g = ctx.createGain(); o.frequency.setValueAtTime(150, t); o.frequency.exponentialRampToValueAtTime(50, t + 0.09); env(g, t, v, 0.24); o.connect(g); g.connect(A.beatIn); o.start(t); o.stop(t + 0.32); }
-function sub(t, dur, v = 0.45) { const o = ctx.createOscillator(), g = ctx.createGain(); o.type = 'triangle'; o.frequency.setValueAtTime(82.41 * 1.6, t); o.frequency.exponentialRampToValueAtTime(82.41, t + 0.07); g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(v, t + 0.01); g.gain.setTargetAtTime(0.0001, t + dur * 0.55, dur * 0.22); o.connect(g); g.connect(A.beatIn); o.start(t); o.stop(t + dur + 0.4); }
+// guide 808 on the song's tonic, E2..D#3
+const keyRootHz = () => { const r = Math.max(0, ROOTS.indexOf((SONG.key || 'E:minor').split(':')[0])); return 440 * 2 ** ((40 + (r - 4 + 12) % 12 - 69) / 12); };
+function sub(t, dur, v = 0.45) { const o = ctx.createOscillator(), g = ctx.createGain(); o.type = 'triangle'; const f0 = keyRootHz(); o.frequency.setValueAtTime(f0 * 1.6, t); o.frequency.exponentialRampToValueAtTime(f0, t + 0.07); g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(v, t + 0.01); g.gain.setTargetAtTime(0.0001, t + dur * 0.55, dur * 0.22); o.connect(g); g.connect(A.beatIn); o.start(t); o.stop(t + dur + 0.4); }
 function noise(t, type, f, q, v, dec) { const s = ctx.createBufferSource(), fl = ctx.createBiquadFilter(), g = ctx.createGain(); s.buffer = A.noise; fl.type = type; fl.frequency.value = f; if (q) fl.Q.value = q; env(g, t, v, dec); s.connect(fl); fl.connect(g); g.connect(A.beatIn); s.start(t, Math.random() * 0.5); s.stop(t + dec + 0.05); }
 function snare(t, v = 0.7) { noise(t, 'bandpass', 1900, 0.8, v, 0.15); const o = ctx.createOscillator(), g = ctx.createGain(); o.type = 'triangle'; o.frequency.setValueAtTime(200, t); env(g, t, v * 0.5, 0.08); o.connect(g); g.connect(A.beatIn); o.start(t); o.stop(t + 0.12); }
 function clap(t, v = 0.6) { [0, 0.011, 0.022].forEach((d, i) => noise(t + d, 'bandpass', 1300, 1.1, v * (i === 2 ? 1 : 0.6), i === 2 ? 0.13 : 0.012)); }
@@ -877,7 +969,7 @@ function playUnit(u, t) {
   const bar = Math.floor(u / 16) + 1, step = ((u % 16) + 16) % 16;
   if (project.click && step % 4 === 0) click(t, step === 0);
   if (project.melody) { const m = MEL.get(u); if (m) guideNote(t, m.midi + (project.melOct || 0), m.d * U / st.rate, m.ad); }
-  if (beat.buffer) return;
+  if (beat.buffer || !SONG.demo) return;
   const p = part(bar), r = st.rate, Aa = bar % 2 === 0;
   if (p === 'drill') {
     if ((Aa && (step === 0 || step === 11)) || (!Aa && (step === 3 || step === 6 || step === 14))) { kick(t); sub(t, (Aa && step === 0 ? 0.7 : 0.35) / r); }
@@ -934,21 +1026,23 @@ async function alignBuffer(buf) {
   }
   return { offset: fine.off, score: best.s };
 }
-async function useBeat(arrayBuf, name, offset, quiet) {
-  const buf = await ctx.decodeAudioData(arrayBuf.slice(0));
+async function useBeat(arrayBuf, name, offset, quiet, decoded) {
+  const buf = decoded || await ctx.decodeAudioData(arrayBuf.slice(0));
   let off = offset, score = 1;
-  if (off == null) { const r = await alignBuffer(buf); off = r.offset; score = r.score; }
+  if (off == null) { if (SONG.demo) { const r = await alignBuffer(buf); off = r.offset; score = r.score; } else off = 0; }
   beat.buffer = buf; beat.offset = off; beat.name = name;
   const mono = ctx.createBuffer(1, buf.length, buf.sampleRate);
   { const m = mono.getChannelData(0); for (let c = 0; c < buf.numberOfChannels; c++) { const d = buf.getChannelData(c); for (let i = 0; i < d.length; i++) m[i] += d[i] / buf.numberOfChannels; } }
   beat.peaks = makePeaks(mono); beat.sr = buf.sampleRate;
+  if (!SONG.demo) { SONG.grid.end = buf.duration; setGrid(SONG.grid); }
   if (!quiet) {
     project.click = false; syncClickUI(); saveSoon();
-    try { await IDB.put('kv', 'beat', { name, data: arrayBuf, offset: off }); } catch (e) { toast('Beat se nepodařilo uložit na disk.', 'warn'); }
+    try { await IDB.put('kv', beatKey(), { name, data: arrayBuf, offset: off }); } catch (e) { toast('Beat se nepodařilo uložit na disk.', 'warn'); }
     const pct = Math.round(Math.min(1, score) * 100);
-    if (score < 0.5) setBeatStatus(`${name}: shoda jen ${pct} %. Možná to není beat BATMAN. Pusť hook a případně posuň o takt.`, 'warn');
+    if (!SONG.demo) setBeatStatus(`${name}: ${fmtBpm(SONG.grid.bpm)} BPM, ${keyName(SONG.key)}.`, 'ok');
+    else if (score < 0.5) setBeatStatus(`${name}: shoda jen ${pct} %. Možná to není beat BATMAN. Pusť hook a případně posuň o takt.`, 'warn');
     else setBeatStatus(`${name}: srovnáno (posun ${(off >= 0 ? '+' : '') + off.toFixed(3).replace('.', ',')} s, shoda ${pct} %).`, 'ok');
-  } else setBeatStatus(`${name} (uložený beat, posun ${(off >= 0 ? '+' : '') + off.toFixed(3).replace('.', ',')} s).`, 'ok');
+  } else setBeatStatus(SONG.demo ? `${name} (uložený beat, posun ${(off >= 0 ? '+' : '') + off.toFixed(3).replace('.', ',')} s).` : `${name}: ${fmtBpm(SONG.grid.bpm)} BPM, ${keyName(SONG.key)}.`, 'ok');
   $('beatShift').hidden = false;
   if (st.playing) startPlay(tNow());
   tlDirty = true; renderMixPane();
@@ -956,21 +1050,246 @@ async function useBeat(arrayBuf, name, offset, quiet) {
 function setBeatStatus(m, cls) { const el = $('beatStatus'); el.textContent = m; el.className = 'status' + (cls ? ' ' + cls : ''); }
 async function loadBeatFile(file) {
   if (!file) return;
+  if (st.recording) return;
+  if (st.playing) pause();
   setBeatStatus('Načítám a měřím beat…');
-  try { await useBeat(await file.arrayBuffer(), file.name, null); toast('Beat nahraný a srovnaný s textem.', 'ok'); }
-  catch (e) { console.error(e); setBeatStatus('Tenhle soubor neumím přečíst. Zkus MP3 nebo WAV.', 'warn'); }
+  try {
+    const ab = await file.arrayBuffer();
+    if (SONG.demo) { await useBeat(ab, file.name, null); toast('Beat nahraný a srovnaný s textem.', 'ok'); return; }
+    const buf = await ctx.decodeAudioData(ab.slice(0));
+    setBeatStatus('Měřím tempo, takty a tóninu…'); await sleep(30);
+    const a = analyzeBeat(buf);
+    applyAnalysis(a, buf.duration);
+    await useBeat(ab, file.name, 0, false, buf);
+    rebuildSong();
+    toast(`Beat nahraný: ${fmtBpm(a.bpm)} BPM, ${keyName(a.key)}. Pusť ho s klikem a zkontroluj takty v záložce Píseň.`, 'ok', 8000);
+  } catch (e) { console.error(e); setBeatStatus('Tenhle soubor neumím přečíst. Zkus MP3 nebo WAV.', 'warn'); }
 }
 async function shiftBeat(d) {
+  if (!SONG.demo) { SONG.grid.bar0 += d === 1.6 ? BAR : d === -1.6 ? -BAR : d; rebuildSong(); saveSoon(); setBeatStatus(`Začátek taktů posunut na ${SONG.grid.bar0.toFixed(3).replace('.', ',')} s.`, 'ok'); if (st.playing) startPlay(tNow()); return; }
   beat.offset += d;
-  try { const b = await IDB.get('kv', 'beat'); if (b) { b.offset = beat.offset; await IDB.put('kv', 'beat', b); } } catch (e) {}
+  try { const b = await IDB.get('kv', beatKey()); if (b) { b.offset = beat.offset; await IDB.put('kv', beatKey(), b); } } catch (e) {}
   setBeatStatus(`Posun beatu ${(beat.offset >= 0 ? '+' : '') + beat.offset.toFixed(3).replace('.', ',')} s.`, 'ok');
   if (st.playing) startPlay(tNow()); tlDirty = true;
 }
 async function backToGuide() {
   beat.buffer = null; beat.peaks = null; beat.name = '';
-  try { await IDB.del('kv', 'beat'); } catch (e) {}
-  project.click = true; syncClickUI(); $('beatShift').hidden = true; setBeatStatus('Hraje vodicí beat.');
+  try { await IDB.del('kv', beatKey()); } catch (e) {}
+  project.click = true; syncClickUI(); $('beatShift').hidden = true; setBeatStatus(SONG.demo ? 'Hraje vodicí beat.' : 'Beat odebraný. Hraje jen klik.');
   if (st.playing) startPlay(tNow()); tlDirty = true; saveSoon();
+}
+/* =====================================================================
+   6b. SONG TOOLS: beat analysis (tempo, downbeat, key), syllables, auto-rhythm, tap-rhythm
+   ===================================================================== */
+const ROOTS = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+const ROOTS_CZ = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'B', 'H'];
+const MODE_CZ = { minor: 'moll', major: 'dur', harm: 'harmonická moll', phryg: 'orientální (hidžáz)', gypsy: 'cikánská moll' };
+const keyName = k => { if (!k) return '?'; const [r, m] = k.split(':'); const i = ROOTS.indexOf(r); return (ROOTS_CZ[i] || r) + ' ' + (MODE_CZ[m] || 'moll'); };
+const fmtBpm = b => String(Math.round(b * 10) / 10).replace('.', ',');
+function fftMag(re) {   // in-place radix-2 FFT of a real frame, returns magnitudes of the first half
+  const n = re.length, im = new Float32Array(n);
+  for (let i = 1, j = 0; i < n; i++) { let bit = n >> 1; for (; j & bit; bit >>= 1) j ^= bit; j ^= bit; if (i < j) { const t = re[i]; re[i] = re[j]; re[j] = t; } }
+  for (let len = 2; len <= n; len <<= 1) {
+    const ang = -2 * Math.PI / len, wr = Math.cos(ang), wi = Math.sin(ang);
+    for (let i = 0; i < n; i += len) { let cr = 1, ci = 0; for (let k = 0; k < len / 2; k++) { const a = i + k, b = a + len / 2, xr = re[b] * cr - im[b] * ci, xi = re[b] * ci + im[b] * cr; re[b] = re[a] - xr; im[b] = im[a] - xi; re[a] += xr; im[a] += xi; const t = cr * wr - ci * wi; ci = cr * wi + ci * wr; cr = t; } }
+  }
+  const m = new Float32Array(n / 2); for (let i = 0; i < n / 2; i++) m[i] = Math.hypot(re[i], im[i]); return m;
+}
+function analyzeBeat(buf) {
+  const sr = buf.sampleRate, n = buf.length, ch = buf.numberOfChannels;
+  const D = Math.max(1, Math.round(sr / 11025)), srd = sr / D, nd = Math.floor(n / D);
+  const x = new Float32Array(nd);
+  for (let c = 0; c < ch; c++) { const d = buf.getChannelData(c); for (let i = 0; i < nd; i++) { let a = 0; for (let j = 0; j < D; j++) a += d[i * D + j]; x[i] += a / D / ch; } }
+  // onset envelope (5 ms): broadband + kick band
+  const hop = Math.max(1, Math.round(srd * 0.005)), F = Math.floor(nd / hop), fr = hop / srd;
+  const eA = new Float32Array(F), eL = new Float32Array(F), eM = new Float32Array(F), aL = 1 - Math.exp(-2 * Math.PI * 140 / srd), aM = 1 - Math.exp(-2 * Math.PI * 1200 / srd);
+  let lp = 0, lm = 0;
+  for (let f = 0; f < F; f++) { let s = 0, sl = 0, sm = 0; for (let i = f * hop; i < (f + 1) * hop; i++) { const v = x[i]; lp += (v - lp) * aL; lm += (v - lm) * aM; const hv = v - lm; s += v * v; sl += lp * lp; sm += hv * hv; } eA[f] = Math.log(1e-9 + s / hop); eL[f] = Math.log(1e-9 + sl / hop); eM[f] = Math.log(1e-9 + sm / hop); }
+  const on = new Float32Array(F), onL = new Float32Array(F), onM = new Float32Array(F);
+  const rise = (e, f) => Math.max(0, e[f] - Math.max(e[f - 1], e[f - 2]));
+  for (let f = 2; f < F; f++) { onL[f] = rise(eL, f); onM[f] = rise(eM, f); on[f] = rise(eA, f) + 0.7 * onL[f]; }
+  // tempo: autocorrelation of the onset curve, with its double-period added in, weighted toward 125 BPM (±1 octave)
+  let mean = 0; for (let f = 0; f < F; f++) mean += on[f]; mean /= Math.max(1, F);
+  const oc = Float32Array.from(on, v => v - mean);
+  const lagOf = b => 60 / b / fr, maxLag = Math.ceil(lagOf(45)) + 2, ac = new Float32Array(2 * maxLag + 4);
+  for (let L = Math.floor(lagOf(230)); L < ac.length; L++) { let s = 0; for (let f = 0; f + L < F; f++) s += oc[f] * oc[f + L]; ac[L] = s / (F - L); }
+  const acAt = l => { const i = Math.floor(l), t = l - i; return (ac[i] || 0) * (1 - t) + (ac[i + 1] || 0) * t; };
+  let best = { v: -1e9, bpm: 120 };
+  for (let b = 55; b <= 200; b += 0.25) { const l = lagOf(b); const v = (acAt(l) + 0.5 * acAt(2 * l) + 0.25 * acAt(4 * l)) * Math.exp(-0.5 * Math.pow(Math.log2(b / 125) / 0.9, 2)); if (v > best.v) best = { v, bpm: b }; }
+  const combSum = (bpm) => { const P = 60 / bpm / fr, steps = Math.max(16, Math.round(P)); let bs = -1, bph = 0; for (let k = 0; k < steps; k++) { const ph = k * P / steps; let s = 0; for (let t = ph; t < F - 1; t += P) { const j = Math.round(t); s += Math.max(on[j], on[j - 1] || 0, on[j + 1] || 0); } if (s > bs) { bs = s; bph = ph; } } return { s: bs, ph: bph, P }; };
+  // a half-time trap beat read at 65-84 is the same pattern as 130-168: rappers count those at the faster tempo
+  if (best.bpm < 85) best.bpm *= 2; else if (best.bpm > 185) best.bpm /= 2;
+  let fine = { s: -1, bpm: best.bpm, ph: 0, P: 0 };
+  for (let b = best.bpm * 0.985; b <= best.bpm * 1.015; b += 0.02) { const r = combSum(b); if (r.s > fine.s) fine = { s: r.s, bpm: b, ph: r.ph, P: r.P }; }
+  const bpm = Math.round(fine.bpm * 100) / 100, P = 60 / bpm / fr;
+  // downbeat: kick on beat 1 + snare where this tempo puts it (beat 3 in half-time trap, beats 2 and 4 otherwise)
+  const kick = [0, 0, 0, 0], snr = [0, 0, 0, 0], cnt = [0, 0, 0, 0];
+  let k = 0; for (let t = fine.ph; t < F - 1; t += P, k++) { const j = Math.round(t); kick[k % 4] += Math.max(onL[j], onL[j - 1] || 0, onL[j + 1] || 0); snr[k % 4] += Math.max(onM[j], onM[j - 1] || 0, onM[j + 1] || 0); cnt[k % 4]++; }
+  for (let r = 0; r < 4; r++) { kick[r] /= Math.max(1, cnt[r]); snr[r] /= Math.max(1, cnt[r]); }
+  const half = bpm >= 115;
+  let r0 = 0, rb = -1e9;
+  for (let r = 0; r < 4; r++) { const v = kick[r] - 0.5 * kick[(r + 2) % 4] + (half ? snr[(r + 2) % 4] - 0.5 * snr[r] : 0.5 * (snr[(r + 1) % 4] + snr[(r + 3) % 4]) - 0.5 * (snr[r] + snr[(r + 2) % 4])); if (v > rb) { rb = v; r0 = r; } }
+  const barSec = 4 * 60 / bpm;
+  let bar0 = (fine.ph + r0 * P) * fr; bar0 = bar0 % barSec;
+  // first bar with sound
+  let first = 1; { const mx = Math.max(...eA.filter(isFinite)); for (let b = 1; b < 400; b++) { const f0 = Math.floor((bar0 + (b - 1) * barSec) / fr), f1 = Math.floor((bar0 + b * barSec) / fr); if (f0 >= F) break; let m = -99; for (let f = Math.max(0, f0); f < Math.min(F, f1); f++) m = Math.max(m, eA[f]); if (m > mx - 9) { first = b; break; } } }
+  // key: chroma + Krumhansl-Schmuckler
+  // semitone spectrum (peak amplitude per note band), whitened against its ±half-octave neighbourhood:
+  // only notes standing out of the noise count, so hi-hats don't tilt chroma toward the upper pitch classes
+  // frames are taken bar by bar; the bar that opens each 4/8-bar phrase weighs more (loops nearly always start on the tonic chord)
+  const bars = [];
+  for (let b = first; ; b++) { const t = bar0 + (b - 1) * barSec; if (t * srd >= nd) break; if (t < 0) continue; const rel = b - first; bars.push({ s: Math.round(t * srd), e: Math.round((t + barSec) * srd), w: 1 + (rel % 8 === 0 ? 1 : 0) + (rel % 4 === 0 ? 0.5 : 0) }); }
+  const chromaOf = (N, fLo, fHi) => {
+    const out = new Float32Array(12), win = new Float32Array(N), df = srd / N;
+    for (let i = 0; i < N; i++) win[i] = 0.5 - 0.5 * Math.cos(2 * Math.PI * i / N);
+    const n0 = Math.ceil(12 * Math.log2(fLo / 440) + 69), n1 = Math.floor(12 * Math.log2(fHi / 440) + 69), NB = n1 - n0 + 1;
+    const lo = new Int32Array(NB), hi = new Int32Array(NB), sp = new Float32Array(NB), wv = new Float32Array(NB);
+    for (let k = 0; k < NB; k++) { const fc = 440 * 2 ** ((n0 + k - 69) / 12); lo[k] = Math.max(1, Math.round(fc * 2 ** (-1 / 24) / df)); hi[k] = Math.max(lo[k], Math.round(fc * 2 ** (1 / 24) / df)); }
+    for (const B of bars) for (let s = B.s; s + N < nd && (s === B.s || s + N <= B.e); s += N) {
+      const fr2 = new Float32Array(N); let e = 0; for (let i = 0; i < N; i++) { fr2[i] = x[s + i] * win[i]; e += fr2[i] * fr2[i]; }
+      if (e < 1e-4 * N / 4096) continue;
+      const m = fftMag(fr2);
+      for (let k = 0; k < NB; k++) { let v = 0; for (let b = lo[k]; b <= hi[k]; b++) v = Math.max(v, m[b]); sp[k] = Math.sqrt(v); }
+      // only local peaks of the semitone spectrum: a loud bass or kick sweep leaks into its neighbour bands otherwise
+      for (let k = 0; k < NB; k++) { if ((k > 0 && sp[k - 1] > sp[k]) || (k < NB - 1 && sp[k + 1] > sp[k])) { wv[k] = 0; continue; } let s2 = 0, c = 0; for (let j = Math.max(0, k - 6); j <= Math.min(NB - 1, k + 6); j++) if (j !== k) { s2 += sp[j]; c++; } wv[k] = Math.max(0, sp[k] - s2 / Math.max(1, c)); }
+      // overtones: the 3rd harmonic lands on the fifth (+19), the 5th on the major third (+28); take them back out
+      let fm = 1e-9; for (let k = 0; k < NB; k++) fm = Math.max(fm, wv[k]);
+      for (let k = 0; k < NB; k++) { const w = wv[k] - 0.33 * (k >= 19 ? wv[k - 19] : 0) - 0.2 * (k >= 28 ? wv[k - 28] : 0); if (w > 0) out[((n0 + k) % 12 + 12) % 12] += Math.sqrt(w / fm) * B.w; }
+    }
+    return out;
+  };
+  const chroma = chromaOf(4096, 150, 2500);   // below 150 Hz: kick sweeps + bass, analysed on their own
+  const bass = chromaOf(16384, 28, 160);   // 0.7 Hz bins: enough to tell E1 from F1 on an 808
+  const MAJ = [6.35, 2.23, 3.48, 2.33, 4.38, 4.09, 2.52, 5.19, 2.39, 3.66, 2.29, 2.88], MIN = [6.33, 2.68, 3.52, 5.38, 2.60, 3.53, 2.54, 4.75, 3.98, 2.69, 3.34, 3.17];
+  const corr = (a, b) => { const ma = a.reduce((x, y) => x + y) / 12, mb = b.reduce((x, y) => x + y) / 12; let s = 0, sa = 0, sb = 0; for (let i = 0; i < 12; i++) { s += (a[i] - ma) * (b[i] - mb); sa += (a[i] - ma) ** 2; sb += (b[i] - mb) ** 2; } return s / Math.sqrt(sa * sb + 1e-12); };
+  // bass (808 / sub) mostly sits on the tonic: give it its own vote
+  const bmax = Math.max(...bass) || 1, bn = Array.from(bass, v => v / bmax);
+  let key = 'A:minor', kb = -9; const _ks = [];
+  for (let r = 0; r < 12; r++) {
+    const rot = Array.from({ length: 12 }, (_, i) => chroma[(i + r) % 12]), rb2 = Array.from({ length: 12 }, (_, i) => bass[(i + r) % 12]);
+    const tonic = 0.6 * bn[r];
+    const cM = corr(rot, MAJ) + 0.5 * corr(rb2, MAJ) + tonic, cm = corr(rot, MIN) + 0.5 * corr(rb2, MIN) + tonic;
+    _ks.push([ROOTS[r] + ':major', +cM.toFixed(3)], [ROOTS[r] + ':minor', +cm.toFixed(3)]);
+    if (cM > kb) { kb = cM; key = ROOTS[r] + ':major'; } if (cm > kb) { kb = cm; key = ROOTS[r] + ':minor'; }
+  }
+  // common in Roma, oriental and drill beats: phrygian dominant (hijaz) and harmonic minor; only on clear evidence
+  { const [kr, km] = key.split(':'), r = ROOTS.indexOf(kr), cmx = Math.max(...chroma) || 1;
+    const ev = i => chroma[(r + i) % 12] / cmx + 0.5 * bn[(r + i) % 12], more = (a, b) => ev(a) > 0.3 && ev(a) > 1.15 * ev(b);
+    if (more(1, 2) && more(4, 3) && more(8, 9)) key = kr + ':phryg';
+    else if (km === 'minor' && more(11, 10) && more(8, 9)) key = kr + ':harm'; }
+  analyzeBeat.dbg = { ev: (() => { const r = ROOTS.indexOf(key.split(':')[0]), cmx = Math.max(...chroma) || 1; return Array.from({ length: 12 }, (_, i) => +(chroma[(r + i) % 12] / cmx + 0.5 * bn[(r + i) % 12]).toFixed(2)); })(), ks: _ks.sort((a, b) => b[1] - a[1]).slice(0, 6), chroma: Array.from(chroma, v => +(v / Math.max(...chroma)).toFixed(2)), bass: bn.map(v => +v.toFixed(2)) };
+  return { bpm, bar0, key, firstBar: first };
+}
+function relayoutSections(startBar) {
+  let bar = Math.max(1, startBar || 1);
+  SONG.sections.forEach(sec => { sec.bar = bar; bar += Math.max(1, sec.lines.length) * LINE_BARS; });
+}
+function applyAnalysis(a, dur) {
+  const oldLU = LINE_U;
+  SONG.grid = { bpm: a.bpm, bar0: a.bar0, lineBars: a.bpm >= 115 ? 2 : 1, end: dur };
+  SONG.key = a.key; SONG.firstBar = a.firstBar;
+  setGrid(SONG.grid);
+  if (LINE_U !== oldLU) retimeAllLines(oldLU);
+  if (!SONG.placed) relayoutSections(a.firstBar);
+}
+/* ---------- syllables (Czech / Slovak / Romani friendly) ---------- */
+const VOW = 'aáäeéěiíoóôuúůyýAÁÄEÉĚIÍOÓÔUÚŮYÝ';
+const isV = c => !!c && VOW.includes(c);
+const isL = c => !!c && /\p{L}/u.test(c);
+const ONSETS = new Set(['st', 'sp', 'sk', 'sv', 'sm', 'sn', 'sl', 'št', 'šp', 'šk', 'šl', 'šv', 'zd', 'zv', 'zl', 'zn', 'zm', 'žd', 'pr', 'br', 'tr', 'dr', 'kr', 'gr', 'fr', 'vr', 'hr', 'pl', 'bl', 'kl', 'gl', 'fl', 'vl', 'hl', 'tř', 'dř', 'př', 'bř', 'kř', 'hř', 'vř', 'mř', 'tv', 'dv', 'kv', 'hv', 'čt', 'ct', 'zp', 'sc', 'ph', 'čh', 'kh', 'th', 'str', 'stř', 'spr', 'skr', 'skl', 'spl', 'zdr', 'zpr', 'ztr', 'zbr', 'zkr', 'štr', 'šťr', 'vzd']);
+function sylWord(w) {
+  const m = w.match(/^([^\p{L}\d]*)(.*?)([^\p{L}\d]*)$/u); const pre = m[1], s = m[2], post = m[3];
+  if (!s) return [w];
+  const nuc = [];
+  for (let i = 0; i < s.length; i++) {
+    const c = s[i];
+    if (isV(c)) { const two = (c + (s[i + 1] || '')).toLowerCase(); if (two === 'ou' || two === 'au' || two === 'eu') { nuc.push([i, i + 1]); i++; } else nuc.push([i, i]); continue; }
+    if ('rlRLŕĺ'.includes(c) && i > 0 && !isV(s[i - 1]) && isL(s[i - 1]) && !isV(s[i + 1])) nuc.push([i, i]);
+  }
+  if (nuc.length <= 1) return [pre + s + post];
+  const cuts = [];
+  for (let k = 0; k + 1 < nuc.length; k++) {
+    const a = nuc[k][1] + 1, b = nuc[k + 1][0], cl = s.slice(a, b);
+    const lc = cl.toLowerCase();
+    if (cl.length === 0) cuts.push(b);
+    else if (cl.length === 1 || lc === 'ch') cuts.push(a);
+    else if (ONSETS.has(lc)) cuts.push(a);                                   // ne-spím, zů-stal
+    else if (cl.length >= 4 && ONSETS.has(lc.slice(-3))) cuts.push(b - 3);   // e.g. mon-stra
+    else if (cl.length >= 3 && ONSETS.has(lc.slice(-2))) cuts.push(b - 2);   // e.g. jab-lko -> keeps a valid onset
+    else cuts.push(lc.startsWith('ch') ? a + 2 : a + 1);
+  }
+  const out = []; let p = 0; cuts.forEach(c => { out.push(s.slice(p, c)); p = c; }); out.push(s.slice(p));
+  out[0] = pre + out[0]; out[out.length - 1] += post;
+  return out.filter(x => x.length);
+}
+/* a text line -> words with syllables; one-letter prepositions (v, s, z, k) glue to the next word */
+function tokenizeLine(text) {
+  const raw = text.replace(/-/g, '‑').replace(/_/g, ' ').trim().split(/\s+/).filter(Boolean);
+  const words = []; let ad = false, glue = '';
+  for (let tk of raw) {
+    if (/^[–—‑]+$/.test(tk)) { words.push({ sep: true }); continue; }
+    if (!/[\p{L}\d]/u.test(tk)) continue;
+    let open = false, close = false;
+    if (tk[0] === '(') { ad = true; open = true; tk = tk.slice(1); }
+    if (tk.endsWith(')')) { close = true; tk = tk.slice(0, -1); }
+    if (!close && /^[vszkVSZK]$/.test(tk)) { glue += tk + '_'; if (open) words.push({ openOnly: true }); continue; }
+    const syls = sylWord(tk);
+    if (glue) { syls[0] = glue + syls[0]; glue = ''; }
+    const w = { ad, open, close, syls, punct: /[,.!?;:…–]$/.test(tk) };
+    words.push(w);
+    if (close) ad = false;
+  }
+  // an "(" that only held a glued preposition belongs to the next word
+  for (let i = 0; i < words.length; i++) if (words[i].openOnly) { if (words[i + 1]) { words[i + 1].open = true; words[i + 1].ad = true; } words.splice(i, 1); i--; }
+  return words;
+}
+const SLOT = () => LINE_U >= 32 ? 2 : 1;
+/* evenly spaced rap rhythm: 8th notes (16ths on slow beats), a breath after commas, the last word held, rest at the end */
+function autoDurations(words) {
+  const flat = []; words.forEach(w => { if (!w.sep) w.syls.forEach((s, i) => flat.push({ w, first: i === 0, last: i === w.syls.length - 1 })); });
+  const S = SLOT(), N = flat.length, avail = LINE_U - 2 * S, d = new Array(N).fill(S);
+  if (N * S > avail) {
+    if (S === 2) { let need = N * 2 - avail; for (const pass of [0, 1]) for (let i = N - 1; i >= 0 && need > 0; i--) if (d[i] === 2 && (pass === 1 || !flat[i].first)) { d[i] = 1; need--; } }
+  } else {
+    let extra = avail - N * S;
+    for (let i = 0; i < N - 1 && extra >= S; i++) if (flat[i].last && flat[i].w.punct && !flat[i].w.ad) { d[i] += S; extra -= S; }
+    let li = -1; for (let i = N - 1; i >= 0; i--) if (!flat[i].w.ad) { li = i; break; }
+    if (li >= 0) { const add = Math.min(extra, 2 * S); d[li] += add; extra -= add; }
+  }
+  const starts = []; let u = 0; for (let i = 0; i < N; i++) { starts.push(u); u += d[i]; }
+  return { starts, d };
+}
+/* words + syllable start/length (in 16ths) -> notation string, rests filled in, padded to the line length */
+function buildNotation(words, starts, d) {
+  const toks = []; let k = 0, cur = 0;
+  const rest = n => { if (n <= 0) return; toks.push('.'.repeat(n >> 1) + (n & 1 ? ',' : '')); };
+  for (const w of words) {
+    if (w.sep) { toks.push('–'); continue; }
+    const parts = [];
+    w.syls.forEach((s, i) => {
+      const st0 = starts[k], dd = d[k]; k++;
+      if (i === 0) { rest(st0 - cur); cur = st0; }
+      else if (st0 > cur && parts.length) { const j = parts.length - 1; parts[j].d += st0 - cur; cur = st0; }
+      parts.push({ t: s, d: dd }); cur += dd;
+    });
+    toks.push((w.open ? '(' : '') + parts.map(p => p.t + (p.d !== 2 ? ':' + p.d : '')).join('-') + (w.close ? ')' : ''));
+  }
+  rest(LINE_U - cur);
+  return toks.join(' ');
+}
+const lineNotation = text => { const w = tokenizeLine(text); const r = autoDurations(w); return buildNotation(w, r.starts, r.d); };
+const sylCount = text => tokenizeLine(text).reduce((a, w) => a + (w.sep ? 0 : w.syls.length), 0);
+/* when the line length changes (1 <-> 2 bars), auto lines are re-generated and tapped ones scaled */
+function retimeAllLines(oldLU) {
+  SONG.sections.forEach(sec => {
+    if (!sec.text) return;
+    sec.lines = sec.text.map((t, i) => {
+      if ((sec.rh || [])[i] !== 'tap') return lineNotation(t);
+      const p = parse(sec.lines[i] || ''), f = LINE_U / oldLU, words = tokenizeLine(t);
+      const starts = [], d = []; p.syl.forEach(s => { starts.push(Math.round(s.u0 * f)); d.push(Math.max(1, Math.round(s.d * f))); });
+      return starts.length === words.reduce((a, w) => a + (w.sep ? 0 : w.syls.length), 0) ? buildNotation(words, starts, d) : lineNotation(t);
+    });
+  });
 }
 const minT = () => beat.buffer ? -beat.offset : 0;
 const endT = () => beat.buffer ? beat.buffer.duration - beat.offset : END_T;
@@ -979,7 +1298,10 @@ const endT = () => beat.buffer ? beat.buffer.duration - beat.offset : END_T;
    7. PITCH ENGINE (autotune + pitch shift, TD-PSOLA in a worker)
    ===================================================================== */
 function workerMain() {
-  const SCALES = { Em: [4, 6, 7, 9, 11, 0, 2], Epent: [4, 7, 9, 11, 2], chrom: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11] };
+  const ROOTS = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+  const MODES = { minor: [0, 2, 3, 5, 7, 8, 10], major: [0, 2, 4, 5, 7, 9, 11], harm: [0, 2, 3, 5, 7, 8, 11], phryg: [0, 1, 4, 5, 7, 8, 10], gypsy: [0, 2, 3, 6, 7, 8, 11],
+    minpent: [0, 3, 5, 7, 10], majpent: [0, 2, 4, 7, 9], harmpent: [0, 3, 5, 7, 11], phrygpent: [0, 1, 4, 7, 8], gypsypent: [0, 3, 7, 8, 11] };
+  const scalePcs = sc => { if (!sc || sc === 'chrom') return [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]; const [r, m] = sc.split(':'); const ri = Math.max(0, ROOTS.indexOf(r)); return (MODES[m] || MODES.minor).map(x => (x + ri) % 12); };
   self.onmessage = e => {
     const { id, sr, data, s } = e.data;
     try {
@@ -1044,7 +1366,7 @@ function workerMain() {
       const w = []; for (let k = -2; k <= 2; k++) { const v = f0[f + k]; if (v > 0) w.push(v); }
       w.sort((a, b) => a - b); fm[f] = w[w.length >> 1];
     }
-    const scale = SCALES[s.scale] || SCALES.Em, shiftR = Math.pow(2, (s.shift || 0) / 12);
+    const scale = scalePcs(s.scale), shiftR = Math.pow(2, (s.shift || 0) / 12);
     const ratio = new Float32Array(F), kk = 1 - Math.min(0.985, (s.speed || 0) * 0.985);
     let cm = null;
     for (let f = 0; f < F; f++) {
@@ -1083,7 +1405,14 @@ function workerMain() {
 const pitchWorker = new Worker(URL.createObjectURL(new Blob(['(' + workerMain.toString() + ')()'], { type: 'application/javascript' })));
 const pJobs = new Map(); let pSeq = 0;
 pitchWorker.onmessage = e => { const j = pJobs.get(e.data.id); if (!j) return; pJobs.delete(e.data.id); e.data.error ? j.rej(new Error(e.data.error)) : j.res(e.data.out); };
-const procKey = fx => (fx.gate ? 'g' : '') + ((fx.tune.on || fx.shift) ? '|' + [fx.tune.on ? 1 : 0, fx.tune.scale, fx.tune.speed.toFixed(2), fx.tune.amount.toFixed(2), fx.shift].join('|') : '');
+/* 'song' = the song's key, 'songpent' = its pentatonic (robot sound); legacy 'Em'/'Epent' from the first version */
+function resolveScale(sc) {
+  const key = SONG.key || 'E:minor', [r, m] = key.split(':');
+  if (sc === 'song' || sc === 'Em') return sc === 'Em' ? 'E:minor' : key;
+  if (sc === 'songpent' || sc === 'Epent') return sc === 'Epent' ? 'E:minpent' : r + ':' + ({ major: 'majpent', harm: 'harmpent', phryg: 'phrygpent', gypsy: 'gypsypent' }[m] || 'minpent');
+  return sc || 'chrom';
+}
+const procKey = fx => (fx.gate ? 'g' : '') + ((fx.tune.on || fx.shift) ? '|' + [fx.tune.on ? 1 : 0, resolveScale(fx.tune.scale), fx.tune.speed.toFixed(2), fx.tune.amount.toFixed(2), fx.shift].join('|') : '');
 function processBuffer(bufId, fx) {
   const key = procKey(fx), B = BUFS.get(bufId);
   if (!key || !B) return Promise.resolve(B ? B.raw : null);
@@ -1091,7 +1420,7 @@ function processBuffer(bufId, fx) {
   if (B.jobs && B.jobs[key]) return B.jobs[key];
   B.jobs = B.jobs || {};
   const data = B.raw.getChannelData(0).slice();
-  const p = new Promise((res, rej) => { const id = ++pSeq; pJobs.set(id, { res, rej }); pitchWorker.postMessage({ id, sr: B.raw.sampleRate, data, s: { gate: !!fx.gate, tune: fx.tune.on, scale: fx.tune.scale, speed: fx.tune.speed, amount: fx.tune.amount, shift: fx.shift } }, [data.buffer]); })
+  const p = new Promise((res, rej) => { const id = ++pSeq; pJobs.set(id, { res, rej }); pitchWorker.postMessage({ id, sr: B.raw.sampleRate, data, s: { gate: !!fx.gate, tune: fx.tune.on, scale: resolveScale(fx.tune.scale), speed: fx.tune.speed, amount: fx.tune.amount, shift: fx.shift } }, [data.buffer]); })
     .then(out => { const b = ctx.createBuffer(1, out.length, B.raw.sampleRate); b.copyToChannel(out, 0); const keys = Object.keys(B.proc); if (keys.length > 2) delete B.proc[keys[0]]; B.proc[key] = b; delete B.jobs[key]; return b; })
     .catch(err => { console.error(err); delete B.jobs[key]; return B.raw; });
   B.jobs[key] = p; return p;
@@ -1195,6 +1524,7 @@ function sleepLock() { try { if (wakeLock) wakeLock.release(); } catch (e) {} wa
 const lineAt = T => { let i = -1; for (let k = 0; k < NL; k++) { if (LINES[k].t0 <= T + 0.05) i = k; else break; } return i; };
 const sectionAt = T => { let s = -1; SECTIONS.forEach((sec, k) => { if (sec.t0 <= T + 0.05) s = k; }); return s; };
 function armLoop(Tref) {
+  if (st.loop === 'line' && !NL) { st.loop = 'off'; refreshLoopUI(); return; }
   if (st.loop === 'line') { const i = Math.max(0, lineAt(Tref)); st.loopA = LINES[i].t0 - BAR; st.loopB = LINES[i].t0 + LINE; }
   else if (st.loop === 'sec') { const s = Math.max(0, sectionAt(Tref)); st.loopSec = s; st.loopA = SECTIONS[s].t0 - BAR; st.loopB = SECTIONS[s].t1; }
   refreshLoopUI();
@@ -1210,7 +1540,7 @@ function refreshLoopUI() {
   setEls.forEach((s, k) => s.lp.classList.toggle('on', st.loop === 'sec' && st.loopSec === k));
   tlDirty = true;
 }
-function stepLine(dir) { const i = lineAt(tNow()); userSeek(LINES[clamp(i + dir, 0, NL - 1)].t0 - (st.playing ? BAR : 0)); }
+function stepLine(dir) { if (!NL) return; const i = lineAt(tNow()); userSeek(LINES[clamp(i + dir, 0, NL - 1)].t0 - (st.playing ? BAR : 0)); }
 function stepSection(dir) { const s = sectionAt(tNow()); userSeek(SECTIONS[clamp(s + dir, 0, SECTIONS.length - 1)].t0 - (st.playing ? 2 * BAR : 0)); }
 
 /* =====================================================================
@@ -1263,8 +1593,8 @@ function micFail(errs) {
     ? 'Prohlížeč mikrofon nepustil. Zavři tohle okno a spusť studio znovu přes SPUSTIT STUDIO.bat.'
     : 'Prohlížeč mikrofon nepustil. Klikni na ikonku vlevo od adresy stránky, u Mikrofonu dej Povolit a stránku obnov (F5).';
   else if (errs.some(x => x.stage === 'audio')) msg = 'Mikrofon se zapnul, ale nepovedlo se napojit nahrávání. Zkus to znovu, případně restartuj studio.';
-  else if (names.length && names.every(n => n === 'NotFoundError' || n === 'OverconstrainedError')) msg = 'Žádný mikrofon nenalezen. Zkontroluj, že je HyperX zapojený do USB.';
-  else msg = 'Windows nepustil žádný mikrofon. Zkus HyperX odpojit a znovu zapojit do USB, pak dej Zapnout. Pomoct může i restart počítače.';
+  else if (names.length && names.every(n => n === 'NotFoundError' || n === 'OverconstrainedError')) msg = 'Žádný mikrofon nenalezen. Zkontroluj, že je mikrofon zapojený.';
+  else msg = 'Systém nepustil žádný mikrofon. Zkus mikrofon odpojit a znovu zapojit (u USB mikrofonu jiný port), pak dej Zapnout. Pomoct může i restart počítače.';
   mic.err = msg;
   mic.diag = errs.map(x => `${x.dev}: ${x.e && x.e.name ? x.e.name : 'chyba'}${x.e && x.e.message ? ' – ' + x.e.message : ''}`).join('\n');
   updateMicUI(); toast(msg, 'warn', 12000);
@@ -1488,20 +1818,27 @@ function lineHTML(L) {
   }).join(' ');
 }
 const trackEl = $('track'), lyr = $('lyr'), stage = $('stage');
-const lnEls = [], sylEls = [];
-SECTIONS.forEach(sec => {
-  const h = document.createElement('div'); h.className = 'ln-sec';
-  h.innerHTML = `<b>${esc(sec.name)}</b>${sec.sub ? ' · ' + sec.sub : ''} · takt ${sec.bar} · ${fmt0(sec.t0)}`;
-  trackEl.appendChild(h);
-  for (let i = sec.first; i <= sec.last; i++) {
-    const L = LINES[i], p = document.createElement('p');
-    p.className = 'ln fut'; p.innerHTML = lineHTML(L);
-    p.addEventListener('click', () => { if (st.recording) return; userSeek(L.t0 - BAR); });
-    trackEl.appendChild(p); lnEls.push(p); sylEls.push([...p.querySelectorAll('.s')]);
-  }
-});
-const firstWordEl = lnEls.map(p => p.querySelector('.w:not(.ad)') || p.querySelector('.w'));
+const lnEls = [], sylEls = [], firstWordEl = [];
 let linePos = [], layoutDirty = true, focusIdx = -1, curIdx = -2, stateIdx = -3, cueOn = -1, lastCount = '', lastSec = -1, lastBeat = -1;
+function buildLyricDOM() {
+  trackEl.innerHTML = ''; lnEls.length = 0; sylEls.length = 0; firstWordEl.length = 0;
+  SECTIONS.forEach(sec => {
+    const h = document.createElement('div'); h.className = 'ln-sec';
+    h.innerHTML = `<b>${esc(sec.name)}</b>${sec.sub ? ' · ' + esc(sec.sub) : ''} · takt ${sec.bar} · ${fmt0(sec.t0)}`;
+    trackEl.appendChild(h);
+    for (let i = sec.first; i <= sec.last; i++) {
+      const L = LINES[i], p = document.createElement('p');
+      p.className = 'ln fut'; p.innerHTML = lineHTML(L);
+      p.addEventListener('click', () => { if (st.recording) return; userSeek(L.t0 - BAR); });
+      trackEl.appendChild(p); lnEls.push(p); sylEls.push([...p.querySelectorAll('.s')]);
+      firstWordEl.push(p.querySelector('.w:not(.ad)') || p.querySelector('.w'));
+    }
+  });
+  focusIdx = -1; curIdx = -2; stateIdx = -3; cueOn = -1; lastSec = -1; lastCount = ''; layoutDirty = true;
+  $('count').innerHTML = '';
+  $('emptySong').hidden = NL > 0;
+}
+buildLyricDOM();
 function measureLines() { linePos = lnEls.map(el => ({ top: el.offsetTop, h: el.offsetHeight })); layoutDirty = false; scrollLyr(focusIdx, true); }
 function scrollLyr(i, instant) {
   if (i < 0 || !linePos[i]) return;
@@ -1512,6 +1849,8 @@ function scrollLyr(i, instant) {
 const beatEls = [...document.querySelectorAll('#beat4 i')];
 function renderStage(T) {
   if (layoutDirty) measureLines();
+  stage.classList.toggle('recording', st.recording);
+  if (!NL || lnEls.length !== NL) { $('stagePos').textContent = `takt ${clamp(Math.floor((T - BAR0) / BAR) + 1, 1, TOTAL_BARS)}`; return; }
   let i = -1; for (let k = 0; k < NL; k++) { if (LINES[k].t0 <= T) i = k; else break; }
   const active = i >= 0 && T < LINES[i].t0 + LINE ? i : -1;
   const upcoming = active >= 0 ? active + 1 : i + 1;
@@ -1553,7 +1892,7 @@ function renderStage(T) {
   const ph = (T - BAR0) / BEAT, bIdx = Math.floor(ph), b4 = ((bIdx % 4) + 4) % 4;
   if (bIdx !== lastBeat) { lastBeat = bIdx; beatEls.forEach((d, k) => d.classList.toggle('on', k === b4)); }
   const bar = Math.floor((T - BAR0) / BAR) + 1;
-  if (!RM) { const p = part(clamp(bar, 1, TOTAL_BARS)); const drums = p === 'drill' || p === 'jersey' || p === 'light'; const frac = (ph - bIdx) * BEAT / st.rate; stage.style.setProperty('--pulse', (st.playing && drums ? (b4 === 0 ? 1 : b4 === 2 ? 0.9 : 0.4) * Math.exp(-frac / 0.16) : 0).toFixed(3)); }
+  if (!RM) { const p = part(clamp(bar, 1, TOTAL_BARS)); const drums = !SONG.demo || p === 'drill' || p === 'jersey' || p === 'light'; const frac = (ph - bIdx) * BEAT / st.rate; stage.style.setProperty('--pulse', (st.playing && drums ? (b4 === 0 ? 1 : b4 === 2 ? 0.9 : 0.4) * Math.exp(-frac / 0.16) : 0).toFixed(3)); }
   const secIdx = active >= 0 ? LINES[active].si : upcoming < NL ? LINES[upcoming].si : SECTIONS.length - 1;
   if (secIdx !== lastSec) {
     lastSec = secIdx; const sec = SECTIONS[secIdx];
@@ -1720,8 +2059,8 @@ function drawTimeline(T) {
     }
   } else {
     g.fillStyle = 'rgba(151,165,189,.25)';
-    for (let x = 0; x < W; x += 2) { const t = tAt(x), k = Math.floor(t / 0.1); if (k < 0 || k >= REF_DB.length) continue; const a = Math.pow(clamp((REF_DB[k] + 60) / 60, 0, 1), 1.6), h = Math.max(0.5, a * amp); g.fillRect(x, mid - h, 1.4, h * 2); }
-    g.font = `600 10px ${MF}`; g.fillStyle = C.fog; g.textAlign = 'left'; g.fillText('vodicí beat · nahraj originál v záložce Beat', 8, bl.y + 10);
+    if (SONG.demo) for (let x = 0; x < W; x += 2) { const t = tAt(x), k = Math.floor(t / 0.1); if (k < 0 || k >= REF_DB.length) continue; const a = Math.pow(clamp((REF_DB[k] + 60) / 60, 0, 1), 1.6), h = Math.max(0.5, a * amp); g.fillRect(x, mid - h, 1.4, h * 2); }
+    g.font = `600 10px ${MF}`; g.fillStyle = C.fog; g.textAlign = 'left'; g.fillText(SONG.demo ? 'vodicí beat · nahraj originál v záložce Beat' : 'bez beatu · nahraj MP3 nebo WAV v záložce Beat', 8, bl.y + 10);
   }
   // vocal clips
   lanes.forEach(l => {
@@ -1888,12 +2227,13 @@ function changed(reschedule) {
 document.querySelectorAll('.tab').forEach(b => b.addEventListener('click', () => showTab(b.dataset.tab)));
 function showTab(id) {
   document.querySelectorAll('.tab').forEach(b => b.classList.toggle('on', b.dataset.tab === id));
-  ['fx', 'mix', 'rec', 'sec', 'beat'].forEach(k => { $('pane-' + k).hidden = k !== id; });
+  ['song', 'fx', 'mix', 'rec', 'sec', 'beat'].forEach(k => { $('pane-' + k).hidden = k !== id; });
+  if (id === 'song') renderSongPane();
   if (id === 'mix') renderMixPane();
 }
 const FX_UI = [
   { mod: 'Autotune', key: 'tune.on', note: 'Výsledek uslyšíš po dopočítání (pár sekund).', ctl: [
-    { k: 'tune.scale', label: 'Stupnice', type: 'select', opts: [['Em', 'E moll (tónina beatu)'], ['Epent', 'E moll pentatonika (robot)'], ['chrom', 'Všechny tóny']] },
+    { k: 'tune.scale', label: 'Stupnice', type: 'select', opts: [['song', 'Tónina písně'], ['songpent', 'Pentatonika písně (robot)'], ['chrom', 'Všechny tóny']] },
     { k: 'tune.speed', label: 'Rychlost', type: 'range', min: 0, max: 1, step: 0.01, fmt: v => v < 0.05 ? 'robot' : v < 0.35 ? 'rychlá' : 'přiroz.' },
     { k: 'tune.amount', label: 'Síla', type: 'range', min: 0, max: 1, step: 0.01, fmt: v => Math.round(v * 100) + ' %' } ] },
   { mod: 'Výška hlasu', ctl: [ { k: 'shift', label: 'Posun', type: 'range', min: -12, max: 12, step: 1, fmt: v => (v > 0 ? '+' : '') + v + ' pt' } ], note: 'Dolů = démon, nahoru = chipmunk. Tempo zůstane.' },
@@ -1910,7 +2250,7 @@ const FX_UI = [
   { mod: 'Saturace', ctl: [ { k: 'sat', label: 'Špína', type: 'range', min: 0, max: 1, step: 0.01, fmt: v => Math.round(v * 100) + ' %' } ] },
   { mod: 'Delay', ctl: [
     { k: 'dly.amt', label: 'Množství', type: 'range', min: 0, max: 0.8, step: 0.01, fmt: v => Math.round(v * 100) + ' %' },
-    { k: 'dly.time', label: 'Rytmus', type: 'select', opts: [['1/8', 'osminy (0,2 s)'], ['3/16', 'tečkované (0,3 s)'], ['1/4', 'čtvrtky (0,4 s)'], ['1/2', 'půlky (0,8 s)']] },
+    { k: 'dly.time', label: 'Rytmus', type: 'select', opts: [['1/8', 'osminy'], ['3/16', 'tečkované osminy'], ['1/4', 'čtvrtky'], ['1/2', 'půlky']] },
     { k: 'dly.fb', label: 'Opakování', type: 'range', min: 0, max: 0.85, step: 0.01, fmt: v => Math.round(v * 100) + ' %' } ] },
   { mod: 'Dozvuk', ctl: [
     { k: 'rev.amt', label: 'Množství', type: 'range', min: 0, max: 0.9, step: 0.01, fmt: v => Math.round(v * 100) + ' %' },
@@ -2041,13 +2381,17 @@ $('armPick').addEventListener('click', e => { const b = e.target.closest('[data-
 
 /* sections pane */
 const setEls = [];
-SECTIONS.forEach((sec, si) => {
-  const li = document.createElement('li'); li.className = sec.kind;
-  li.innerHTML = `<button type="button" class="go"><span class="d"></span><span class="nm">${esc(sec.name)}${sec.sub ? ' · ' + sec.sub : ''}</span><span class="rg">${fmt0(sec.t0)} · ${sec.lines.length} ř.</span></button><button type="button" class="lp" title="Opakovat tuhle část" aria-label="Opakovat ${esc(sec.name)}"><svg class="i" style="width:15px;height:15px"><use href="#i-loop"/></svg></button><span class="pb"></span>`;
-  li.querySelector('.go').addEventListener('click', () => { if (st.recording) return; userSeek(sec.t0 - BAR); });
-  li.querySelector('.lp').addEventListener('click', () => { if (st.recording) return; if (st.loop === 'sec' && st.loopSec === si) setLoop('off'); else { setLoop('sec', si); userSeek(sec.t0 - BAR, true); if (!st.playing) togglePlay(); } });
-  $('setl').appendChild(li); setEls.push({ li, pb: li.querySelector('.pb'), lp: li.querySelector('.lp') });
-});
+function buildSetlist() {
+  $('setl').innerHTML = ''; setEls.length = 0;
+  SECTIONS.forEach((sec, si) => {
+    const li = document.createElement('li'); li.className = sec.kind;
+    li.innerHTML = `<button type="button" class="go"><span class="d"></span><span class="nm">${esc(sec.name)}${sec.sub ? ' · ' + esc(sec.sub) : ''}</span><span class="rg">${fmt0(sec.t0)} · ${sec.lines.length} ř.</span></button><button type="button" class="lp" title="Opakovat tuhle část" aria-label="Opakovat ${esc(sec.name)}"><svg class="i" style="width:15px;height:15px"><use href="#i-loop"/></svg></button><span class="pb"></span>`;
+    li.querySelector('.go').addEventListener('click', () => { if (st.recording) return; userSeek(sec.t0 - BAR); });
+    li.querySelector('.lp').addEventListener('click', () => { if (st.recording) return; if (st.loop === 'sec' && st.loopSec === si) setLoop('off'); else { setLoop('sec', si); userSeek(sec.t0 - BAR, true); if (!st.playing) togglePlay(); } });
+    $('setl').appendChild(li); setEls.push({ li, pb: li.querySelector('.pb'), lp: li.querySelector('.lp') });
+  });
+}
+buildSetlist();
 document.querySelectorAll('#loopSeg button').forEach(b => b.addEventListener('click', () => { if (!st.recording) setLoop(b.dataset.loop); }));
 $('size').addEventListener('input', e => { project.textK = +e.target.value; document.documentElement.style.setProperty('--k', project.textK); $('sizeO').textContent = Math.round(project.textK * 100) + ' %'; layoutDirty = true; saveSoon(); });
 $('melOct').addEventListener('change', e => { project.melOct = +e.target.value; saveSoon(); });
@@ -2063,16 +2407,250 @@ document.querySelectorAll('[data-shift]').forEach(b => b.addEventListener('click
 $('toGuide').addEventListener('click', backToGuide);
 $('newProj').addEventListener('click', async () => {
   if (st.recording) return;
-  if (!await confirmBox('Nový projekt', 'Smažu všechny nahrané takes a vrátím efekty na výchozí. Beat zůstane. Tohle nejde vrátit.', 'Smazat a začít znovu')) return;
+  if (!await confirmBox('Smazat takes', `Smažu všechny nahrané takes v písničce „${SONG.name}“ a vrátím efekty na výchozí. Text a beat zůstanou. Tohle nejde vrátit.`, 'Smazat takes')) return;
   if (st.playing) pause();
-  const keep = { latMode: project.latMode, latMs: project.latMs, micId: project.micId, inGainDb: project.inGainDb, textK: project.textK };
+  const ids = new Set(); project.tracks.forEach(t => t.clips.forEach(c => ids.add(c.buf)));
+  const keep = { id: project.id, song: project.song, layout: LAYOUT_VERSION, latMode: project.latMode, latMs: project.latMs, micId: project.micId, micPicked: project.micPicked, inGainDb: project.inGainDb, textK: project.textK, guideClosed: true };
   project = Object.assign(defaultProject(), keep);
   project.click = !beat.buffer;
-  BUFS.clear(); undoStack.length = 0; redoStack.length = 0;
-  try { const ks = await IDB.keys('audio'); for (const k of ks || []) await IDB.del('audio', k); } catch (e) {}
+  ids.forEach(id => BUFS.delete(id)); undoStack.length = 0; redoStack.length = 0;
+  try { for (const id of ids) await IDB.del('audio', id); } catch (e) {}
   project.tracks.forEach(t => A.chains[t.id].set(t.fx, true));
-  applyMix(); syncAllUI(); changed(false); toast('Nový projekt připravený.', 'ok');
+  applyMix(); syncAllUI(); changed(false); toast('Takes smazané.', 'ok');
 });
+
+/* =====================================================================
+   12b. SONGS: list, create, open, delete + the "Píseň" editor (text, grid, tap rhythm)
+   ===================================================================== */
+function mergeProject(saved) {
+  const def = defaultProject(), defTracks = def.tracks;
+  const p = Object.assign(def, saved || {});
+  p.tracks = defTracks.map(dt => {
+    const s = (saved && Array.isArray(saved.tracks) ? saved.tracks : []).find(z => z.id === dt.id); if (!s) return dt;
+    const fx = mkFx({}); const merge = (a, b) => { for (const k in b) { if (b[k] && typeof b[k] === 'object' && !Array.isArray(b[k]) && a[k]) merge(a[k], b[k]); else a[k] = b[k]; } };
+    merge(fx, s.fx || {});
+    if (fx.tune.scale === 'Em') fx.tune.scale = 'song'; if (fx.tune.scale === 'Epent') fx.tune.scale = 'songpent';
+    return Object.assign(dt, s, { fx, name: dt.name, color: dt.color });
+  });
+  if (!p.song) p.song = clone(DEMO_SONG);
+  return p;
+}
+function rebuildSong() {
+  buildSong(); buildLyricDOM(); buildSetlist(); refreshLoopUI();
+  if (!view.user) fitView();
+  tlDirty = true; sizeDirty = true;
+  $('logoSong').textContent = SONG.name;
+  document.title = `Rap Studio · ${SONG.name}`;
+  if (!$('pane-song').hidden) renderSongPane();
+}
+async function openProject(p, keepUndo) {
+  if (st.recording) stopRec();
+  if (st.playing) pause();
+  stopSources();
+  project = p; SONG = project.song;
+  beat.buffer = null; beat.peaks = null; beat.name = ''; beat.offset = 0;
+  BUFS.clear(); if (!keepUndo) { undoStack.length = 0; redoStack.length = 0; }
+  buildSong(); buildLyricDOM(); buildSetlist();   // DOM must match LINES/SECTIONS before the awaits below (render runs meanwhile)
+  const ids = new Set(); project.tracks.forEach(t => t.clips.forEach(c => ids.add(c.buf)));
+  for (const id of ids) { try { const a = await IDB.get('audio', id); if (a) { const b = ctx.createBuffer(1, a.data.length, a.sr); b.copyToChannel(a.data, 0); registerBuffer(id, b); } } catch (e) { console.error(e); } }
+  project.tracks.forEach(t => { t.clips = t.clips.filter(c => BUFS.has(c.buf)); });
+  let bt = null; try { bt = await IDB.get('kv', beatKey()); } catch (e) {}
+  if (bt && bt.data) { try { await useBeat(bt.data, bt.name, bt.offset, true); } catch (e) { console.error(e); } }
+  else { $('beatShift').hidden = true; setBeatStatus(SONG.demo ? 'Nebo soubor přetáhni sem.' : 'Tahle písnička zatím nemá beat. Nahraj MP3 nebo WAV.'); }
+  project.tracks.forEach(t => A.chains[t.id].set(t.fx, true));
+  st.T = Math.max(minT(), (SECTIONS[0] ? SECTIONS[0].t0 : barT(1)) - 2 * BAR); st.playFrom = st.T;
+  view.user = false;
+  rebuildSong(); applyMix(); syncAllUI(); changed(false); fitView();
+  project.tracks.forEach(t => processTrack(t, false));
+}
+async function openSongById(id) {
+  if (st.recording) return;
+  if (id === project.id) { closeModal('mSongs'); return; }
+  await saveNow();
+  const raw = await IDB.get('kv', 'song:' + id);
+  if (!raw) { toast('Tahle písnička se nenašla.', 'warn'); return; }
+  const p = mergeProject(raw); p.id = id;
+  await openProject(p);
+  await IDB.put('kv', 'current', id);
+  closeModal('mSongs'); toast(`Otevřeno: ${SONG.name}`, 'ok', 2000);
+}
+async function createSong(name, file) {
+  if (st.recording) return;
+  await saveNow();
+  const p = mergeProject({});
+  p.id = newId(); p.layout = LAYOUT_VERSION; p.guideClosed = true; p.click = true;
+  p.song = { name: (name || '').trim() || 'Nová písnička', demo: false, producer: '', key: 'A:minor', placed: false,
+    grid: { bpm: 140, bar0: 0, lineBars: 2, end: 180 },
+    sections: [{ id: newId(), name: 'Sloka 1', kind: 'verse', bar: 1, text: [], rh: [], lines: [] }] };
+  await openProject(p);
+  if (file) await loadBeatFile(file);
+  await saveNow();
+  closeModal('mSongs'); showTab('song');
+  toast(file ? 'Písnička založená. Teď napiš text a dej „Použít text“.' : 'Písnička založená. Nahraj beat v záložce Beat a napiš text.', 'ok', 7000);
+}
+async function deleteSong(id) {
+  if (st.recording) return;
+  const e = SONG_INDEX.find(x => x.id === id); if (!e) return;
+  if (!await confirmBox('Smazat písničku', `Smažu písničku „${e.name}“ i se všemi takes a beatem. Tohle nejde vrátit.`, 'Smazat')) return;
+  const raw = id === project.id ? project : await IDB.get('kv', 'song:' + id);
+  const ids = new Set(); (raw && raw.tracks || []).forEach(t => (t.clips || []).forEach(c => ids.add(c.buf)));
+  for (const b of ids) { try { await IDB.del('audio', b); } catch (er) {} }
+  try { await IDB.del('kv', 'song:' + id); await IDB.del('kv', 'beat:' + id); } catch (er) {}
+  SONG_INDEX = SONG_INDEX.filter(x => x.id !== id);
+  await IDB.put('kv', 'songs', SONG_INDEX);
+  if (id === project.id) {
+    if (SONG_INDEX.length) { const nx = SONG_INDEX[0].id; const p = mergeProject(await IDB.get('kv', 'song:' + nx)); p.id = nx; await openProject(p); }
+    else { const p = mergeProject({}); p.id = 'demo'; await openProject(p); await saveNow(); }
+  }
+  renderSongList();
+}
+function renderSongList() {
+  const list = [...SONG_INDEX].sort((a, b) => (b.updated || 0) - (a.updated || 0));
+  $('songList').innerHTML = list.map(s => `<div class="songcard${s.id === project.id ? ' on' : ''}"><div><b>${esc(s.name)}${s.demo ? ' · ukázka' : ''}</b><small>${s.bpm ? s.bpm + ' BPM · ' : ''}${s.lines || 0} řádků · ${s.takes || 0} takes${s.beatName ? ' · ' + esc(s.beatName) : ' · bez beatu'}${s.updated ? ' · ' + new Date(s.updated).toLocaleDateString('cs-CZ') : ''}</small></div><button class="btn sm amber" type="button" data-open="${s.id}">${s.id === project.id ? 'Otevřená' : 'Otevřít'}</button><button class="btn sm ghost" type="button" data-del="${s.id}" aria-label="Smazat ${esc(s.name)}">Smazat</button></div>`).join('');
+}
+$('bSongs').addEventListener('click', async () => { await saveNow(); renderSongList(); openModal('mSongs'); setTimeout(() => $('nsName').focus(), 30); });
+$('songList').addEventListener('click', e => { const o = e.target.closest('[data-open]'), d = e.target.closest('[data-del]'); if (o) openSongById(o.dataset.open); else if (d) deleteSong(d.dataset.del); });
+let nsFile = null; const NS_HINT = 'Beat (MP3 / WAV) můžeš přidat i později. Studio mu samo změří tempo, takty a tóninu.';
+$('nsFile').addEventListener('change', e => { nsFile = e.target.files[0] || null; $('nsFileName').textContent = nsFile ? `Beat: ${nsFile.name}` : NS_HINT; });
+$('nsCreate').addEventListener('click', async () => { const b = $('nsCreate'); b.disabled = true; b.textContent = 'Zakládám a měřím beat…'; try { await createSong($('nsName').value, nsFile); } finally { b.disabled = false; b.textContent = 'Vytvořit písničku'; nsFile = null; $('nsFile').value = ''; $('nsName').value = ''; $('nsFileName').textContent = NS_HINT; } });
+$('emptyGo').addEventListener('click', () => showTab('song'));
+$('gSong').addEventListener('click', () => $('bSongs').click());
+$('logoSong').addEventListener('click', () => $('bSongs').click());
+
+/* ---------- song text <-> sections ---------- */
+const lineText = (sec, i) => (sec.text && sec.text[i] != null) ? sec.text[i] : plainOf(parse(sec.lines[i] || ''));
+function textOfSong() { return SONG.sections.map(sec => `[${sec.name}${sec.sub ? ' · ' + sec.sub : ''}]\n` + sec.lines.map((_, i) => lineText(sec, i)).join('\n')).join('\n\n'); }
+function parseSongText(txt) {
+  const out = []; let cur = null;
+  txt.split(/\r?\n/).forEach(raw => {
+    const l = raw.trim(); if (!l) return;
+    const h = l.match(/^\[(.+)\]$/);
+    if (h) { const [nm, sub] = h[1].split('·').map(s => s.trim()); cur = { name: nm || 'Část', sub: sub || '', lines: [] }; out.push(cur); return; }
+    if (!cur) { cur = { name: 'Sloka 1', sub: '', lines: [] }; out.push(cur); }
+    cur.lines.push(l);
+  });
+  return out;
+}
+function applySongText() {
+  const parsed = parseSongText($('sgText').value);
+  if (!parsed.length) { toast('Napiš aspoň jeden řádek textu.', 'warn'); return; }
+  const keep = new Map();   // same text keeps its rhythm (tapped, hand-made, sung notes)
+  SONG.sections.forEach(sec => sec.lines.forEach((n, i) => { const t = lineText(sec, i); if (!keep.has(t)) keep.set(t, { n, rh: (sec.rh || [])[i] || (sec.text ? 'auto' : 'demo') }); }));
+  const old = SONG.sections, sameShape = old.length === parsed.length && old.every((s, i) => s.name === parsed[i].name);
+  const startBar = Math.max(1, Math.round(+$('sgStart').value || (old[0] ? old[0].bar : 1)));
+  const secs = parsed.map((p, k) => {
+    const o = sameShape ? old[k] : old.find(s => s.name === p.name && (s.sub || '') === p.sub);
+    const lines = [], rh = [];
+    p.lines.forEach(t => { const kp = keep.get(t); if (kp && kp.rh !== 'auto') { lines.push(kp.n); rh.push(kp.rh); } else { lines.push(lineNotation(t)); rh.push('auto'); } });
+    return { id: o ? o.id : newId(), name: p.name, sub: p.sub || (o && o.sub) || '', kind: o && o.name === p.name ? o.kind : kindOf(p.name), track: o && o.track, bar: o ? o.bar : 1, text: p.lines, rh, lines };
+  });
+  SONG.sections = secs;
+  if (!sameShape || startBar !== (old[0] && old[0].bar)) { setGrid(SONG.grid); relayoutSections(startBar); }
+  rebuildSong(); changed(false); saveSoon();
+  const over = LINES.filter(L => L.over).length;
+  toast(over ? `Text rozvržený na beat. ${over} ${over === 1 ? 'řádek je' : 'řádky jsou'} moc ${over === 1 ? 'dlouhý' : 'dlouhé'} – rozděl ${over === 1 ? 'ho' : 'je'} nebo dolaď ťukáním.` : 'Text rozvržený na beat. Pusť si to a rytmus řádků dolaď ťukáním.', over ? 'warn' : 'ok', 7000);
+}
+const KEY_GROUPS = [['minor', 'Moll'], ['major', 'Dur'], ['harm', 'Harmonická moll'], ['phryg', 'Orientální (hidžáz)'], ['gypsy', 'Cikánská moll']];
+function renderSongPane() {
+  const g = SONG.grid, demo = !!SONG.demo, pane = $('pane-song');
+  let h = `<h3>Písnička</h3><div class="mod">
+    <div class="ctl"><label for="sgName">Název</label><input class="inp" id="sgName" type="text" maxlength="60" value="${esc(SONG.name)}"></div>
+    <div class="ctl"><label for="sgProd">Producent beatu</label><input class="inp" id="sgProd" type="text" maxlength="40" placeholder="např. HosseinAmin" value="${esc(SONG.producer || '')}"></div>
+    <p class="note">Producent se přidá do názvu exportu „(Prod. …)“. U free beatů je to povinné.</p></div>`;
+  h += `<div class="mod"><div class="mod-h"><b>Tempo a takty</b><small>${fmtBpm(BPM)} BPM · ${keyName(SONG.key)}</small></div>`;
+  if (demo) h += `<p class="note">Ukázka má beat změřený přesně, tady není co nastavovat.</p>`;
+  else h += `<div class="ctl"><label for="sgBpm">Tempo</label><input class="inp num" id="sgBpm" type="number" min="40" max="220" step="0.01" value="${g.bpm}"><output>BPM</output></div>
+    <div class="btnrow"><button type="button" data-g="x2">Tempo ×2</button><button type="button" data-g="d2">Tempo ÷2</button><button type="button" data-g="re">Změřit znovu</button></div>
+    <div class="ctl"><label>Začátek taktu</label><div class="btnrow" style="grid-column:2/4;margin:0"><button type="button" data-g="b-">◀ doba</button><button type="button" data-g="b+">doba ▶</button><button type="button" data-g="s-">◀ 1/16</button><button type="button" data-g="s+">1/16 ▶</button></div></div>
+    <div class="ctl"><label for="sgLine">Řádek textu</label><select id="sgLine"><option value="1" ${LINE_BARS === 1 ? 'selected' : ''}>1 takt (pomalejší beaty)</option><option value="2" ${LINE_BARS === 2 ? 'selected' : ''}>2 takty (trap, drill)</option></select></div>
+    <div class="ctl"><label for="sgKey">Tónina</label><select id="sgKey">${KEY_GROUPS.map(([m, g]) => `<optgroup label="${g}">` + ROOTS.map(r => r + ':' + m).map(k => `<option value="${k}" ${k === SONG.key ? 'selected' : ''}>${keyName(k)}</option>`).join('') + '</optgroup>').join('')}</select></div>
+    <p class="note">Kontrola: zapni <b>klik</b> a pusť beat. Klik má sedět na bicí a „1“ v počítadle nahoře na začátek taktu (většinou kopák). Když nesedí, posuň začátek o dobu. Autotune ladí do zvolené tóniny.</p>`;
+  h += `</div><div class="mod"><div class="mod-h"><b>Text</b><small>řádek = ${LINE_BARS} ${LINE_BARS === 1 ? 'takt' : 'takty'}</small></div>
+    <textarea class="ta" id="sgText" spellcheck="false" placeholder="[Refrén]&#10;první řádek refrénu&#10;druhý řádek (jé)&#10;&#10;[Sloka 1]&#10;…">${esc(textOfSong().replace(/^\[Sloka 1\]\n$/, ''))}</textarea>
+    <div class="ctl"><label for="sgStart">Začít v taktu</label><input class="inp num" id="sgStart" type="number" min="1" value="${SECTIONS[0] ? SECTIONS[0].bar : 1}"><output></output></div>
+    <button class="btn amber wide" type="button" id="sgApply">Použít text a rozvrhnout na beat</button>
+    <p class="note">Jeden řádek = jeden rapový řádek. Části označ v hranatých závorkách, třeba [Refrén]. Ad-liby dej do závorek (jé). Studio samo rozdělí slabiky a rozvrhne je na beat. Rytmus každého řádku pak dolaď tlačítkem <b>Ťukat</b>.</p></div>`;
+  SECTIONS.forEach((sec, si) => {
+    h += `<div class="mod sgsec"><div class="mod-h"><b>${esc(sec.name)}${sec.sub ? ' · ' + esc(sec.sub) : ''}</b><span>takt <input type="number" min="1" data-secbar="${si}" value="${sec.bar}" aria-label="Začátek části ${esc(sec.name)}"></span></div>`;
+    if (!sec.lines.length) h += `<p class="note">Zatím bez textu.</p>`;
+    for (let i = sec.first; i <= sec.last; i++) {
+      const L = LINES[i], n = L.syl.length, rh = (sec.rh || [])[L.li] || (sec.text ? 'auto' : 'demo');
+      h += `<div class="sgline${L.over ? ' warn' : ''}${rh === 'tap' ? ' tapd' : ''}"><span class="t">${esc(L.plain)}</span><span class="c" title="slabiky / místa v řádku">${n}/${LINE_U / SLOT()}${L.over ? ' · moc dlouhý' : rh === 'tap' ? ' · ťuknuto' : ''}</span><button type="button" class="tapb" data-tap="${i}">Ťukat</button><button type="button" data-auto="${i}" ${rh === 'auto' ? 'disabled' : ''}>Auto</button></div>`;
+    }
+    h += `</div>`;
+  });
+  pane.innerHTML = h;
+}
+$('pane-song').addEventListener('change', e => {
+  const t = e.target;
+  if (t.id === 'sgName') { SONG.name = t.value.trim() || 'Bez názvu'; $('logoSong').textContent = SONG.name; document.title = `Rap Studio · ${SONG.name}`; saveSoon(); }
+  else if (t.id === 'sgProd') { SONG.producer = t.value.trim(); saveSoon(); }
+  else if (t.id === 'sgBpm') { const v = clamp(+t.value || BPM, 40, 220); changeGrid({ bpm: v }); }
+  else if (t.id === 'sgLine') changeGrid({ lineBars: +t.value });
+  else if (t.id === 'sgKey') { SONG.key = t.value; saveSoon(); project.tracks.forEach(tr => processTrack(tr, true)); renderSongPane(); toast(`Tónina: ${keyName(SONG.key)}. Autotune teď ladí do ní.`, 'ok', 3000); }
+  else if (t.dataset.secbar != null) { const sec = SECTIONS[+t.dataset.secbar]; sec.bar = Math.max(1, Math.round(+t.value || 1)); SONG.placed = true; rebuildSong(); saveSoon(); }
+});
+$('pane-song').addEventListener('click', async e => {
+  const b = e.target.closest('button'); if (!b) return;
+  if (b.id === 'sgApply') { applySongText(); return; }
+  if (b.dataset.tap != null) { startTap(+b.dataset.tap); return; }
+  if (b.dataset.auto != null) { const L = LINES[+b.dataset.auto]; if (!L) return; const sec = L.sec; ensureText(sec); sec.lines[L.li] = lineNotation(sec.text[L.li]); sec.rh[L.li] = 'auto'; rebuildSong(); saveSoon(); return; }
+  const g = b.dataset.g; if (!g) return;
+  if (g === 'x2') changeGrid({ bpm: clamp(BPM * 2, 40, 220) });
+  else if (g === 'd2') changeGrid({ bpm: clamp(BPM / 2, 40, 220) });
+  else if (g === 'b-' || g === 'b+') changeGrid({ bar0: SONG.grid.bar0 + (g === 'b+' ? BEAT : -BEAT) });
+  else if (g === 's-' || g === 's+') changeGrid({ bar0: SONG.grid.bar0 + (g === 's+' ? U : -U) });
+  else if (g === 're') { if (!beat.buffer) return toast('Nejdřív nahraj beat (záložka Beat).', 'warn'); b.disabled = true; b.textContent = 'Měřím…'; await sleep(30); const a = analyzeBeat(beat.buffer); applyAnalysis(a, beat.buffer.duration); rebuildSong(); saveSoon(); toast(`${fmtBpm(a.bpm)} BPM, ${keyName(a.key)}.`, 'ok'); }
+});
+function ensureText(sec) { if (!sec.text) sec.text = sec.lines.map((_, i) => lineText(sec, i)); if (!sec.rh) sec.rh = sec.lines.map(() => 'demo'); }
+function changeGrid(ch) {
+  if (SONG.demo) return;
+  const oldLU = LINE_U, T = tNow();
+  Object.assign(SONG.grid, ch);
+  if (ch.bpm != null && ch.lineBars == null) SONG.grid.lineBars = SONG.grid.bpm >= 115 ? 2 : 1;
+  const barSec = 240 / SONG.grid.bpm; SONG.grid.bar0 = ((SONG.grid.bar0 % barSec) + barSec) % barSec;
+  setGrid(SONG.grid);
+  project.tracks.forEach(t => A.chains[t.id] && A.chains[t.id].set(t.fx));   // tempo-synced delay
+  if (LINE_U !== oldLU) { retimeAllLines(oldLU); if (!SONG.placed) relayoutSections(SECTIONS[0] ? SECTIONS[0].bar : 1); }
+  rebuildSong(); saveSoon();
+  if (st.playing) startPlay(T);
+}
+
+/* ---------- tap rhythm: play the line, tap a key on every syllable, snap to 16ths ---------- */
+let tap = null;
+async function startTap(i) {
+  if (st.recording || tap) return;
+  const L = LINES[i]; if (!L) return;
+  const sec = L.sec; ensureText(sec);
+  const text = sec.text[L.li], words = tokenizeLine(text), N = words.reduce((a, w) => a + (w.sep ? 0 : w.syls.length), 0);
+  if (!N) return;
+  try { await ctx.resume(); } catch (e) {}
+  tap = { i, L, sec, li: L.li, words, N, taps: [], clickWas: project.click };
+  project.click = true; syncClickUI();
+  $('tapText').textContent = `Ťukej mezerníkem na každou slabiku: ${text}`; $('tapCount').textContent = `0 / ${N}`; $('tapBox').hidden = false;
+  st.playFrom = st.T; startPlay(L.t0 - BAR);
+}
+function tapKey(e) {
+  if (!tap) return;
+  if (e.key === 'Escape') { endTap(false); }
+  else if (!e.repeat && !e.ctrlKey && !e.metaKey) { tap.taps.push(tVis()); $('tapCount').textContent = `${tap.taps.length} / ${tap.N}`; }
+  e.preventDefault(); e.stopImmediatePropagation();
+}
+document.addEventListener('keydown', tapKey, true);
+stage.addEventListener('pointerdown', e => { if (!tap) return; tap.taps.push(tVis()); $('tapCount').textContent = `${tap.taps.length} / ${tap.N}`; e.preventDefault(); });
+function endTap(apply) {
+  const t = tap; tap = null; if (!t) return;
+  pause(); project.click = t.clickWas; syncClickUI(); $('tapBox').hidden = true;
+  if (!apply) { toast('Ťukání zrušené.', '', 1500); return; }
+  const rel = t.taps.map(x => (x - t.L.t0) / U).filter(u => u > -2 && u < LINE_U + 1);
+  if (!rel.length) { toast('Žádné ťuknutí, rytmus zůstal.', '', 2500); return; }
+  const S = SLOT(), starts = [], d = []; let prev = -1;
+  for (let k = 0; k < t.N; k++) { let u = k < rel.length ? Math.round(rel[k]) : prev + S; u = clamp(u, 0, LINE_U - 1); if (u <= prev) u = prev + 1; starts.push(u); prev = u; }
+  for (let k = 0; k < t.N; k++) { const nx = k + 1 < t.N ? starts[k + 1] : LINE_U; d.push(Math.max(1, Math.min(nx - starts[k], 3 * S))); }
+  t.sec.lines[t.li] = buildNotation(t.words, starts, d); t.sec.rh[t.li] = 'tap';
+  rebuildSong(); saveSoon();
+  toast(rel.length < t.N ? `Rytmus uložen. Ťuknul jsi ${rel.length} z ${t.N} slabik, zbytek jsem doplnil.` : 'Rytmus řádku uložen. Pusť si ho, jak sedí.', rel.length < t.N ? 'warn' : 'ok', 4500);
+}
 
 /* =====================================================================
    13. EXPORT
@@ -2080,6 +2658,7 @@ $('newProj').addEventListener('click', async () => {
 let xFmt = 'mp3';
 document.querySelectorAll('#fmtSeg button').forEach(b => b.addEventListener('click', () => { xFmt = b.dataset.fmt; document.querySelectorAll('#fmtSeg button').forEach(z => z.classList.toggle('on', z === b)); }));
 $('bExport').addEventListener('click', () => {
+  $('xName').value = SONG.name + (SONG.producer ? ` (Prod. ${SONG.producer})` : '');
   if (st.recording) return;
   const mixOpt = $('optMixL'), inp = mixOpt.querySelector('input');
   mixOpt.classList.toggle('dis', !beat.buffer); inp.disabled = !beat.buffer;
@@ -2195,7 +2774,8 @@ async function autoMix() {
   if (!tr.length) { toast('Zatím nemáš nic nahraného.', 'warn'); return null; }
   const sr = 22050, t0 = minT(), t1 = endT();
   const bb = await renderJob([], true, t0, t1, sr);
-  const beatDb = activeDb(bb, barT(22) - t0, barT(80) - t0);
+  const vA = SONG.demo ? barT(22) : (SECTIONS.length ? SECTIONS[0].t0 : t0), vB = SONG.demo ? barT(80) : (SECTIONS.length ? SECTIONS[SECTIONS.length - 1].t1 : t1);
+  const beatDb = activeDb(bb, Math.max(0, vA - t0), Math.max(vA - t0 + 4, vB - t0));
   const lv = {};
   for (const t of tr) lv[t.id] = activeDb(await renderJob([t], false, t0, t1, sr));
   const ref = isFinite(lv.lead) ? 'lead' : tr[0].id;
@@ -2310,7 +2890,8 @@ const micMeter = $('micMeter'), micMeter2 = $('micMeter2'), micHold = { hold: 0 
 function render() {
   if (sizeDirty) { FL = fitCanvas(flowCv); TL = fitCanvas(tlCv, totalH); tlW = cvWrap.clientWidth; sizeDirty = false; layoutDirty = true; tlDirty = true; if (!view.user) fitView(); }
   let T = tVis();
-  if (st.playing && !st.recording && st.loop !== 'off' && tNow() >= st.loopB) { startPlay(st.loopA); T = tVis(); }
+  if (tap && (!st.playing || tNow() > tap.L.t0 + LINE + 0.25)) endTap(true);
+  if (st.playing && !st.recording && !tap && st.loop !== 'off' && tNow() >= st.loopB) { startPlay(st.loopA); T = tVis(); }
   renderStage(T);
   drawFlow(T);
   if (st.playing) {
@@ -2321,8 +2902,8 @@ function render() {
   if (tlDirty || drag) { drawTimeline(T); tlDirty = false; }
   const bar = Math.floor((T - BAR0) / BAR) + 1, beatN = Math.floor((T - BAR0) / BEAT) - (bar - 1) * 4 + 1;
   const ck = `${clamp(bar, 1, TOTAL_BARS)}.${clamp(beatN, 1, 4)}|${fmt1(T)}`;
-  if (ck !== lastClock) { lastClock = ck; $('cBar').textContent = `${clamp(bar, 1, TOTAL_BARS)}.${clamp(beatN, 1, 4)}`; $('cTime').textContent = `${fmt1(T)} · ${Math.round(150 * st.rate)} BPM`; }
-  setEls.forEach((s, k) => { const sec = SECTIONS[k], p = clamp((T - sec.t0) / (sec.t1 - sec.t0), 0, 1), w = (p * 100).toFixed(1) + '%'; if (s.pb.style.width !== w) s.pb.style.width = w; });
+  if (ck !== lastClock) { lastClock = ck; $('cBar').textContent = `${clamp(bar, 1, TOTAL_BARS)}.${clamp(beatN, 1, 4)}`; $('cTime').textContent = `${fmt1(T)} · ${fmtBpm(BPM * st.rate)} BPM`; }
+  setEls.forEach((s, k) => { const sec = SECTIONS[k]; if (!sec) return; const p = clamp((T - sec.t0) / (sec.t1 - sec.t0), 0, 1), w = (p * 100).toFixed(1) + '%'; if (s.pb.style.width !== w) s.pb.style.width = w; });
   const mp = mic.ready && mic.an ? peakOf(mic.an) : 0;
   drawMeter(micMeter, mp, micHold);
   if (!$('pane-rec').hidden) drawMeter(micMeter2, mp, micHold2);
@@ -2341,6 +2922,11 @@ function syncAllUI() {
   $('inGain').value = project.inGainDb; $('inGainO').textContent = (project.inGainDb > 0 ? '+' : '') + project.inGainDb + ' dB';
   $('monitor').checked = project.monitor; $('nsup').checked = project.nsup; $('preroll').value = String(project.preroll); $('snap').checked = project.snap;
   syncClickUI(); syncLatUI(); renderFxPane(); renderArmPick(); buildHeaders(); syncClipUI(); updateMicUI(); updateTransportUI(); refreshLoopUI();
+  $('logoSong').textContent = SONG.name;
+  $('beatHelp').innerHTML = SONG.demo
+    ? 'Bez souboru hraje <b>vodicí beat</b> (stejné tempo i stavba). Originál stáhni na <a href="https://beatstars.com/HosseinAmin" target="_blank" rel="noopener">BeatStars → HosseinAmin → BATMAN</a> a nahraj ho sem. Studio ho samo srovná s textem a zapamatuje si ho.'
+    : 'Nahraj beat (MP3 nebo WAV). Studio mu samo změří <b>tempo, začátky taktů a tóninu</b>, zkontrolovat a doladit je můžeš v záložce Píseň. U free beatů dej producenta do názvu tracku.';
+  document.querySelectorAll('[data-shift]').forEach(b => { const v = +b.dataset.shift; b.textContent = SONG.demo ? (v === -1.6 ? 'Beat o takt dřív' : v === 1.6 ? 'o takt později' : v < 0 ? '−10 ms' : '+10 ms') : (v === -1.6 ? 'Takty o takt dřív' : v === 1.6 ? 'o takt později' : v < 0 ? '−10 ms' : '+10 ms'); });
 }
 
 /* =====================================================================
@@ -2370,35 +2956,38 @@ function migrateLayout1to2() {
 }
 (async () => {
   initChains();
+  let p = null, keepUndo = false;
   try {
     await IDB.open();
-    const saved = await IDB.get('kv', 'project');
-    if (saved && saved.v === 1 && Array.isArray(saved.tracks)) {
-      const def = defaultProject(), defTracks = def.tracks;
-      project = Object.assign(def, saved);
-      project.tracks = defTracks.map(dt => { const s = saved.tracks.find(z => z.id === dt.id); if (!s) return dt; const fx = mkFx({}); const merge = (a, b) => { for (const k in b) { if (b[k] && typeof b[k] === 'object' && !Array.isArray(b[k]) && a[k]) merge(a[k], b[k]); else a[k] = b[k]; } }; merge(fx, s.fx || {}); return Object.assign(dt, s, { fx, name: dt.name, color: dt.color }); });
-      project.tracks.forEach(t => A.chains[t.id].set(t.fx, true));
-      if (!saved.layout || saved.layout < LAYOUT_VERSION) {
+    SONG_INDEX = (await IDB.get('kv', 'songs')) || [];
+    if (!SONG_INDEX.length) {
+      // first start (or the first version with a single project): it becomes the demo song
+      const legacy = await IDB.get('kv', 'project');
+      p = mergeProject(legacy && Array.isArray(legacy.tracks) ? legacy : {});
+      p.id = 'demo'; p.song = clone(DEMO_SONG);
+      project = p; SONG = p.song; buildSong();
+      if (legacy && (!legacy.layout || legacy.layout < LAYOUT_VERSION)) {
         const pre = snapshot(), moved = migrateLayout1to2();
-        project.layout = LAYOUT_VERSION; saveSoon();
-        if (moved) { undoStack.push(pre); migratedTakes = moved; }
+        if (moved) { undoStack.push(pre); migratedTakes = moved; keepUndo = true; }
       }
+      p.layout = LAYOUT_VERSION;
+      const lb = await IDB.get('kv', 'beat'); if (lb) await IDB.put('kv', 'beat:demo', lb);
+      await saveNow();
+    } else {
+      const cur = (await IDB.get('kv', 'current')) || SONG_INDEX[0].id;
+      let raw = await IDB.get('kv', 'song:' + cur), id = cur;
+      if (!raw) { id = SONG_INDEX[0].id; raw = await IDB.get('kv', 'song:' + id); }
+      p = mergeProject(raw || {}); p.id = id;
     }
-    const ids = new Set(); project.tracks.forEach(t => t.clips.forEach(c => ids.add(c.buf)));
-    for (const id of ids) {
-      const a = await IDB.get('audio', id);
-      if (!a) continue;
-      const b = ctx.createBuffer(1, a.data.length, a.sr); b.copyToChannel(a.data, 0); registerBuffer(id, b);
-    }
-    project.tracks.forEach(t => { t.clips = t.clips.filter(c => BUFS.has(c.buf)); });
-    try { const ks = await IDB.keys('audio'); for (const k of ks || []) if (!ids.has(k)) await IDB.del('audio', k); } catch (e) {}
-    const bt = await IDB.get('kv', 'beat');
-    if (bt && bt.data) { try { await useBeat(bt.data, bt.name, bt.offset, true); } catch (e) { console.error(e); } }
+    // drop audio that no song uses any more
+    try {
+      const used = new Set();
+      for (const e of SONG_INDEX) { const s = e.id === p.id ? p : await IDB.get('kv', 'song:' + e.id); (s && s.tracks || []).forEach(t => (t.clips || []).forEach(c => used.add(c.buf))); }
+      const ks = await IDB.keys('audio'); for (const k of ks || []) if (!used.has(k)) await IDB.del('audio', k);
+    } catch (e) { console.error(e); }
   } catch (e) { console.error(e); toast('Ukládání v tomhle prohlížeči nefunguje, takes se po zavření ztratí.', 'warn', 8000); }
-  applyMix();
-  syncAllUI();
-  changed(false);
-  project.tracks.forEach(t => processTrack(t, false));
+  if (!p) { p = mergeProject({}); p.id = 'demo'; }
+  await openProject(p, keepUndo);
   render(); requestAnimationFrame(loop);
   if (location.protocol === 'file:') toast('Studio spusť přes SPUSTIT STUDIO.bat, jinak nepůjde mikrofon.', 'warn', 10000);
   if (migratedTakes) toast('Písnička je přeskládaná. Tvoje takes jsem přesunul: sloka 1 je teď na dropu (0:33), hook hned po ní. Ctrl+Z to vrátí.', 'ok', 12000);
@@ -2407,7 +2996,7 @@ function migrateLayout1to2() {
     let peak = 0; if (ok) { await sleep(800); peak = peakOf(mic.an); }
     fetch('/selftest?r=' + encodeURIComponent(JSON.stringify({ ok, label: mic.label || '', err: mic.err || '', diag: mic.diag || '', picked: !!project.micId, ctx: ctx.state, peak: +peak.toFixed(4), rec: mic.node ? (typeof AudioWorkletNode !== 'undefined' && mic.node instanceof AudioWorkletNode ? 'worklet' : 'script') : '-' })));
   }
-  window.__studio = { get project() { return project; }, st, BUFS, ctx, mic, beat, processBuffer, buildChain, renderJob, startRec, stopRec, latency, lineAt, A, alignBuffer, registerBuffer, toWav, view, seek, changed, selectTrack, measureLufs, masterBuffer, limitBuffer, autoMix, useBeat, satCurve, trimLeadingSilence, LINES, MEL };
+  window.__studio = { get project() { return project; }, st, BUFS, ctx, mic, beat, processBuffer, buildChain, renderJob, startRec, stopRec, latency, lineAt, A, alignBuffer, registerBuffer, toWav, view, seek, changed, selectTrack, measureLufs, masterBuffer, limitBuffer, autoMix, useBeat, satCurve, trimLeadingSilence, LINES, MEL, analyzeBeat, sylWord, tokenizeLine, lineNotation, parse, createSong, openSongById, get SONG() { return SONG; }, get SONG_INDEX() { return SONG_INDEX; }, startTap, endTap, get tap() { return tap; }, applySongText, rebuildSong, loadBeatFile, tNow, tVis, deleteSong, get grid() { return { BPM, BAR0, LINE_U, LINE_BARS, TOTAL_BARS }; } };
 })();
 })();
 </script>
