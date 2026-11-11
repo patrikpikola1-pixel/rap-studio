@@ -701,6 +701,16 @@ const CHEMIE_HOOK = [
   'nik:1-do:1 ne:1-má:1 vzo:1-rec,:1 žád:1-ná:1 te:1-o:1-ri:2-e:4',
   'ty:1 a:1 já,:2 ce:1-lá:1 noc:1 je:1 po:1-e:1-zi:2-e:4'
 ];
+const BEZ_HOOK = [
+  'Všich:1-ni:1 no-sí:1 mas:2-ky,:1 všich:1-ni:1 hra:1-jou:1 ro-li',
+  'smě:1-jou:1 se:1 ti:1 do:1 o:1-čí,:2 v_zá:1-dech:1 to:1 pak:1 bo-lí',
+  'Já jsem:1 bez:1 mas-ky,:2 to:1 je:1 mo:1-je:1 prav-da',
+  'kdo:1 stál:2 se:1 mnou:1 do:1-le,:2 ne:1-zná:1 slo:1-vo:1 zra-da',
+  'Všich:1-ni:1 no-sí:1 mas:2-ky,:1 všich:1-ni:1 hra:1-jou:1 ro-li',
+  'smě:1-jou:1 se:1 ti:1 do:1 o:1-čí,:2 v_zá:1-dech:1 to:1 pak:1 bo-lí',
+  'Já jsem:1 bez:1 mas-ky,:2 to:1 je:1 mo:1-je:1 prav-da',
+  'kdo:1 stál:2 se:1 mnou:1 do:1-le,:2 ne:1-zná:1 slo:1-vo:1 zra-da'
+];
 const TEMPLATES = [{
   id: 'chemie', name: 'Chemie', producer: 'Xavien', style: 'chill jazz rap',
   beat: 'CHEMISTRY (Prod. Xavien)', beatUrl: 'https://www.youtube.com/watch?v=KnS9s9Pb97A',
@@ -758,6 +768,66 @@ const TEMPLATES = [{
       '(ka-mav tut:6) ...',
       'nej:1-sem:1 che-mik, a:1-le:1 to-hle vím:4',
       '.. (che-mi-e:6) .'
+    ]}
+  ]
+}, {
+  /* Bez masky: beat CRIMSON (prod. by Robert Tar), 115 BPM, B minor, half-time trap groove (snare on 3).
+     Measured: 8 bars intro without drums, drums in at bar 9 (16.8 s), dropouts in bars 32 and 56 (last bar of each verse).
+     A hard, dense flow: one line per bar, sixteenths, 12-14 syllables, the rhyme on beat 4. */
+  id: 'bezmasky', name: 'Bez masky', producer: 'by Robert Tar', style: 'tvrdý rap, hustý flow',
+  beat: 'CRIMSON (prod. by Robert Tar)', beatUrl: 'https://www.youtube.com/watch?v=RN7-zKm_Vh4',
+  bpm: 115, key: 'B:minor', lineBars: 1, anchor: 9, grid: { bpm: 115, bar0: 0.071, lineBars: 1, end: 154 },
+  sections: [
+    { name: 'Intro', kind: 'calm', rel: -4, lines: [
+      '(jé:4) .. (bez mas-ky:4)',
+      'to-hle je:1 pro:1 ty,:2 co:1 jsou:1 sku:1-teč:1-ný:4',
+      '(čha-ve,:4) .. (jdem:4) .',
+      '...... (ha:2) .'
+    ]},
+    { name: 'Refrén', kind: 'hook', rel: 0, lines: BEZ_HOOK },
+    { name: 'Sloka 1', kind: 'verse', rel: 8, lines: [
+      'Vy:1-rost:1 jsem tam,:2 kde:1 se:1 nik:1-do:1 ne:1-ptal,:1 jak:1 se:1 máš',
+      'nik:1-do:1 nic:1 ti:1 ne:1-dá,:2 mu:1-síš:1 si:1 to:1 vzít,:1 to znáš',
+      'Má:1-ma:1 dě:1-la:1-la:1 po:1 no:1-cích,:1 a:1-bych:1 měl:1 na:1 bo-ty',
+      'dnes:1-ka:1 jí:1 to:1 vra:1-cím,:1 žád:1-ný:1 sl:1-zy,:1 je:1-nom:1 no-ty',
+      'Klu:1-ci:1 z_blo:1-ku:1 vě:1-děj,:1 kdo:1 jsem,:1 ne:1-mu:1-sím:1 nic:1 hrát:4',
+      'kaž:1-dej:1 chce:1 bejt:1 ja:1-ko:1 já,:2 a:1-le:1 nech:1-ce:1 za:1 tím:1 stát:2',
+      'Teď:1 mi:1 kaž:1-dej:1 vo:1-lá,:2 na:1-jed:1-nou:1 jsme ká:1-mo:1-ši',
+      'kde:1 jste:1 by:1-li,:1 když:1 jsem:1 jíd:1-lo:1 hle:1-dal:1 po:2 ko-ších',
+      'Vi:1-dím:1 jim:1 to:1 v_o:1-čích,:1 ten:1 lesk,:2 když:1 vi:1-dí:1 pra-chy',
+      'ú:1-směv:1 ja:1-ko:1 z_rek:1-la:1-my,:2 v_hla:1-vě:1 hra:1-jou:1 ša-chy',
+      'Já:1 jsem:1 po:1-řád:1 stej:1-nej,:2 je:1-nom:1 víc:1 mám:1 na:1 ú-čtu',
+      ', za:1 pra:1-chy:1 si:1 nik:1-do:1 ne:1-kou:1-pí:1 mo:1-ji:1 úc-tu',
+      'Na:1 sto:1-le:1 mám:1 ta:1-líř,:2 ne:1-za:1-po:1-mněl:1 jsem na:1 hlad',
+      ', a:1 v_o:1-čích:1 po:1-řád:1 no:1-sím:1 ten:1 sta:1-rej:1 zim:2-ní:1 chlad',
+      'Nej:1-sem:1 sva:1-tej,:2 nik:1-dy:1 ne:1-bod:1-nu:1 brá:2-chu:1 do:1 zad',
+      'kdo:1 mi:1 lže:1 do:1 o:1-čí,:1 ten:1 u:1 mě:1 ne:1-ní:1 ka:1-ma-rád'
+    ]},
+    { name: 'Refrén', kind: 'hook', rel: 24, lines: BEZ_HOOK },
+    { name: 'Sloka 2', kind: 'verse', rel: 32, lines: [
+      'Noc:1 je:1 čer:1-ná:1 ja:1-ko:1 mo:1-je:1 bun:1-da,:1 měs:1-to:1 sví-tí',
+      'je:1-du:1 s_klu:1-ka:1-ma:1 přes:1 měs:1-to,:1 nik:1-do:1 nás:1 ne:1-chy-tí',
+      'Po:1-tkal:1 hol:1-ku,:1 řek:1-la,:1 že:1 je:1 ji:1-ná:1 než:1 o:1-stat-ní',
+      'pak:1 jsem:1 vi:1-děl,:2 že:1 jí:1 jde:1 jen:1 o:1 to,:1 kdo:1 pla-tí',
+      'Mas:1-ka:1 spad:1-la:1 rych:1-le,:2 sta:1-čil:1 je:1-den:2 po-hled',
+      'v_o:1-čích:1 je:1-nom:1 do:1-la:1-ry,:2 na:1 mě:1 žád:1-nej:1 o-hled',
+      'Ne:1-ří:1-kám,:1 že:1 jsem:1 ne:1-vin:1-nej,:1 ta:1-ky:1 mám:1 svý:1 chy-by',
+      'nik:1-dy:1 jsem:1 ne:1-hrál,:2 že:1 jsem:1 ně:1-co,:1 čím:1 jsem:1 ne-byl',
+      'Mo:1-ji:1 čha:1-ve:1 sto:1-jej:1 ve:1-dle:1 mě,:1 když:1 je:1 to:1 zlý:4',
+      'a:1 když:1 by:1-lo:1 nej:1-hůř,:1 by:1-li:1 ta:1-dy:1 o:1-ni,:1 ne:2 vy:2',
+      'Pe:1-ní:1-ze:1 jsou:1 pa:1-pír,:2 věr:1-nost:1 se:1 ne:1-dá:1 kou-pit',
+      'kdo:1 jed:1-nou:1 pro:1-dá:1 brá:1-chu,:2 ne:1-má:1 kam:1 u:1-stou-pit',
+      'Dí:1-vej:1 se:1 mi:1 do:1 o:1-čí,:2 když:1 se:1 mnou:2 mlu:2-víš:2',
+      'já:1 po:1-znám:1 hned,:2 jest:1-li:1 lžeš,:2 ne:1-bo:1 se:1 bo-jíš',
+      'Mas:1-ky:1 pa:1-daj:1 jak:2 lis:1-tí,:2 když:1 při:1-jde:1 po-dzim',
+      'a:1 já:1 sto:1-jím:1 bez:1 mas:1-ky,:2 a:1 nik:1-dy:1 ne:1-zmi-zím'
+    ]},
+    { name: 'Refrén', kind: 'hook', rel: 48, lines: BEZ_HOOK },
+    { name: 'Outro', kind: 'calm', rel: 56, lines: [
+      BEZ_HOOK[0],
+      '.. (hra-jou ro-li:6)',
+      'já ne:4 . (bez mas-ky:4)',
+      '(jé:4) ......'
     ]}
   ]
 }];

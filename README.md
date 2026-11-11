@@ -36,4 +36,8 @@ Zdarma je jen pro neziskové použití: v názvu tracku musí být **(Prod. Hoss
 Chill jazz rap na beat **CHEMISTRY** (Prod. Xavien, [poslechnout na YouTube](https://www.youtube.com/watch?v=KnS9s9Pb97A)). Ve studiu: **Moje písničky → Hotový text na free beat → Chemie → Založit** a nahraj beat. Studio samo najde, kde naskočí bicí, a celý text usadí na takty.
 Beat má 120 BPM a je v **F moll** (v popisu na YouTube stojí Bm, ale noty v beatu jsou v F). Zdarma je jen pro neziskové použití a v názvu tracku musí být **(Prod. Xavien)**.
 
+## Hotový text „Bez masky“
+Tvrdý rap s hustým flow (jedna slabika na šestnáctinu, kolem 13 slabik na takt) na beat **CRIMSON** (prod. by Robert Tar, [poslechnout na YouTube](https://www.youtube.com/watch?v=RN7-zKm_Vh4)). Ve studiu: **Moje písničky → Hotový text na free beat → Bez masky → Založit** a nahraj beat.
+Beat má 115 BPM a je v **H moll**. Zdarma je jen pro nekomerční použití a v názvu i popisu musí být **(prod. by Robert Tar)**.
+
 U vlastních beatů vyplň v záložce **Píseň** producenta: přidá se do názvu exportu jako „(Prod. …)“.
