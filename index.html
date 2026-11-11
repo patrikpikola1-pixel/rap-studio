@@ -191,7 +191,32 @@ svg.i{width:18px;height:18px;fill:currentColor;flex:none}
 .mod-h b{font:800 14px/1 var(--display);letter-spacing:.12em;text-transform:uppercase}
 .mod-h small{font:500 11px/1 var(--mono);color:var(--fog)}
 .mod.off .ctl{opacity:.45}
-.ctl{display:grid;grid-template-columns:96px minmax(0,1fr) 54px;align-items:center;gap:8px;margin:6px 0}
+.mod.pro{border-color:var(--sodium-a30);background:linear-gradient(180deg,rgba(245,169,61,.07),transparent 70%),var(--panel-2)}
+.mod.pro .btnrow{display:grid;grid-template-columns:1fr auto;gap:8px;margin:8px 0}
+.mod.pro .btnrow button:not(.amber){border:1px solid var(--rule-2);background:var(--panel-3);border-radius:10px;padding:8px 12px;font:600 12.5px/1 var(--body);color:var(--chalk)}
+.ab{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:4px}
+.ab>span{font-size:12.5px;color:var(--steel)}
+.ab .seg button{min-width:58px}
+.rep{list-style:none;margin:10px 0 4px;padding:0;display:grid;gap:5px}
+.rep li{display:grid;grid-template-columns:12px 112px minmax(0,1fr);gap:8px;align-items:baseline;font-size:12.5px;line-height:1.35}
+.rep li::before{content:'';width:8px;height:8px;border-radius:50%;background:#5BC98A;transform:translateY(-1px)}
+.rep li.warn::before{background:var(--sodium)}
+.rep li.bad::before{background:var(--signal,#E85C48)}
+.rep li b{font-weight:700;color:var(--chalk)}
+.rep li span{color:var(--steel)}
+.tone{margin:10px 0 0}
+.tone svg{width:100%;height:auto;display:block;background:var(--panel-3);border-radius:10px;border:1px solid var(--rule)}
+.tone svg text{font:500 6.5px var(--mono);fill:var(--fog)}
+.tone svg .g{stroke:var(--rule-2);stroke-width:.6}
+.tone svg path{fill:none;stroke-width:1.8;stroke-linejoin:round}
+.tone svg .t{stroke:var(--chalk);stroke-dasharray:3 3;opacity:.7}
+.tone svg .m{stroke:#7C8AA5}
+.tone svg .a{stroke:var(--sodium)}
+.tone figcaption{display:flex;gap:12px;flex-wrap:wrap;font-size:11.5px;color:var(--steel);margin-top:6px}
+.tone figcaption i{display:inline-block;width:14px;height:2px;margin-right:5px;vertical-align:middle;background:#7C8AA5}
+.tone figcaption i.a{background:var(--sodium)}
+.tone figcaption i.t{background:none;border-top:2px dashed var(--chalk)}
+.ctl{display:grid;grid-template-columns:96px minmax(0,1fr) 72px;align-items:center;gap:8px;margin:6px 0}
 .ctl label{font-size:12.5px;color:var(--steel)}
 .ctl output{font:500 11.5px/1 var(--mono);color:var(--chalk);text-align:right}
 .ctl select{grid-column:2/4;background:var(--panel-3);border:1px solid var(--rule-2);border-radius:8px;padding:6px 8px;font-size:13px}
@@ -510,7 +535,7 @@ kbd{display:inline-block;min-width:24px;text-align:center;font:600 11.5px/1 var(
       <label class="radio"><input type="radio" name="what" value="stems"><span><b>Každá stopa zvlášť</b><small>hlavní vokál, dabl a ad-liby jako samostatné soubory</small></span></label>
     </div>
     <div class="opt"><span>Formát</span>
-      <div class="seg wide" id="fmtSeg"><button type="button" data-fmt="mp3" class="on">MP3 320 kbps</button><button type="button" data-fmt="wav">WAV (nejvyšší kvalita)</button></div>
+      <div class="seg wide" id="fmtSeg"><button type="button" data-fmt="mp3" class="on">MP3 320 kbps</button><button type="button" data-fmt="wav">WAV 24 bit (nejvyšší kvalita)</button></div>
     </div>
     <div class="opt"><span>Mastering</span>
       <div class="seg wide" id="mastSeg"><button type="button" data-m="-9" class="on">Hlasitý rap (−9 LUFS)</button><button type="button" data-m="-14">Spotify (−14 LUFS)</button><button type="button" data-m="off">Bez</button></div>
@@ -835,20 +860,22 @@ function confirmBox(title, text, yes) {
 /* =====================================================================
    3. PROJECT STATE + PRESETS
    ===================================================================== */
+const AB = { raw: false };   // A/B: true = hear the raw takes (no clean-up, no effects)
 const BASE_FX = { tune: { on: false, scale: 'song', speed: 0.15, amount: 1 }, shift: 0, hp: { on: true, f: 100 }, tel: false, gate: true, deess: 0.35,
+  clean: { on: true, nr: 0.5, click: true, plos: true, res: 0.5, rider: 0.4 }, meq: [0, 0, 0, 0, 0, 0, 0, 0], meqAmt: 1, excite: 0.12, dbl: 0, duck: 0.6,
   eq: { low: -2, mid: 3, air: 3 }, comp: { on: true, amt: 0.55 }, sat: 0.12, rev: { amt: 0.08, size: 'room' }, dly: { amt: 0.08, time: '1/8', fb: 0.25 }, vol: 0.9, pan: 0 };
 const mkFx = patch => { const f = clone(BASE_FX); for (const k in patch) { if (typeof patch[k] === 'object' && !Array.isArray(patch[k])) Object.assign(f[k], patch[k]); else f[k] = patch[k]; } return f; };
 const PRESETS = [
   { id: 'clean', name: 'Čistý', fx: mkFx({ hp: { f: 80 }, eq: { low: 0, mid: 1, air: 1 }, comp: { amt: 0.35 }, sat: 0, rev: { amt: 0.05 }, dly: { amt: 0 } }) },
   { id: 'drill', name: 'Drill vokál', fx: mkFx({ hp: { f: 110 }, eq: { low: -3, mid: 4, air: 3 }, comp: { amt: 0.68 }, sat: 0.18, rev: { amt: 0.07, size: 'room' }, dly: { amt: 0.1, time: '1/8', fb: 0.22 } }) },
-  { id: 'tune', name: 'Autotune trap', fx: mkFx({ tune: { on: true, scale: 'song', speed: 0.12, amount: 1 }, hp: { f: 110 }, eq: { low: -2, mid: 3, air: 4 }, comp: { amt: 0.62 }, sat: 0.1, rev: { amt: 0.18, size: 'studio' }, dly: { amt: 0.14, time: '3/16', fb: 0.3 } }) },
+  { id: 'tune', name: 'Autotune trap', fx: mkFx({ tune: { on: true, scale: 'song', speed: 0.12, amount: 1 }, hp: { f: 110 }, eq: { low: -2, mid: 3, air: 4 }, comp: { amt: 0.62 }, sat: 0.1, excite: 0.18, dbl: 0.22, rev: { amt: 0.18, size: 'studio' }, dly: { amt: 0.14, time: '3/16', fb: 0.3 } }) },
   { id: 'robot', name: 'Robot', fx: mkFx({ tune: { on: true, scale: 'songpent', speed: 0, amount: 1 }, hp: { f: 120 }, eq: { low: -3, mid: 4, air: 5 }, comp: { amt: 0.7 }, sat: 0.22, rev: { amt: 0.12, size: 'studio' }, dly: { amt: 0.12, time: '1/8', fb: 0.25 } }) },
   { id: 'demon', name: 'Démon', fx: mkFx({ shift: -5, hp: { f: 60 }, eq: { low: 3, mid: 2, air: -2 }, comp: { amt: 0.7 }, sat: 0.35, rev: { amt: 0.22, size: 'hall' }, dly: { amt: 0.06 } }) },
   { id: 'chip', name: 'Chipmunk', fx: mkFx({ shift: 7, hp: { f: 160 }, eq: { low: -4, mid: 2, air: 2 }, comp: { amt: 0.5 }, sat: 0.05, rev: { amt: 0.08 }, dly: { amt: 0.05 } }) },
-  { id: 'phone', name: 'Telefon', fx: mkFx({ tel: true, hp: { f: 200 }, eq: { low: -6, mid: 6, air: -3 }, comp: { amt: 0.75 }, sat: 0.45, rev: { amt: 0.04 }, dly: { amt: 0.06 } }) },
+  { id: 'phone', name: 'Telefon', fx: mkFx({ tel: true, hp: { f: 200 }, eq: { low: -6, mid: 6, air: -3 }, comp: { amt: 0.75 }, sat: 0.45, excite: 0, rev: { amt: 0.04 }, dly: { amt: 0.06 } }) },
   { id: 'hall', name: 'Hala', fx: mkFx({ eq: { low: -2, mid: 2, air: 4 }, comp: { amt: 0.5 }, sat: 0.05, rev: { amt: 0.42, size: 'hall' }, dly: { amt: 0.16, time: '1/4', fb: 0.35 } }) },
   { id: 'dbl', name: 'Dabl', fx: mkFx({ hp: { f: 150 }, eq: { low: -4, mid: 2, air: 4 }, comp: { amt: 0.7 }, sat: 0.15, rev: { amt: 0.1, size: 'room' }, dly: { amt: 0.05 }, vol: 0.5, pan: -0.22 }) },
-  { id: 'adlib', name: 'Ad-lib', fx: mkFx({ hp: { f: 200 }, eq: { low: -5, mid: 3, air: 5 }, comp: { amt: 0.6 }, sat: 0.22, rev: { amt: 0.26, size: 'hall' }, dly: { amt: 0.3, time: '1/4', fb: 0.4 }, vol: 0.72, pan: 0.32 }) }
+  { id: 'adlib', name: 'Ad-lib', fx: mkFx({ hp: { f: 200 }, eq: { low: -5, mid: 3, air: 5 }, comp: { amt: 0.6 }, sat: 0.22, excite: 0.2, dbl: 0.35, duck: 0.5, rev: { amt: 0.26, size: 'hall' }, dly: { amt: 0.3, time: '1/4', fb: 0.4 }, vol: 0.72, pan: 0.32 }) }
 ];
 const presetById = id => PRESETS.find(p => p.id === id);
 const TRACKS0 = [
@@ -862,7 +889,7 @@ function defaultProject() {
     v: 1, layout: LAYOUT_VERSION, melody: true, melOct: 0,
     tracks: TRACKS0.map(t => ({ id: t.id, name: t.name, color: t.color, preset: t.preset, fx: clone(presetById(t.preset).fx), clips: [], mute: false, solo: false, takeNo: 0 })),
     sel: { track: 'lead', clip: null },
-    beatVol: 0.85, beatMute: false, master: 0.9,
+    beatVol: 0.85, beatMute: false, master: 0.9, carve: 0.5,
     click: true, preroll: 1, monitor: false, nsup: false, inGainDb: 0, micId: '',
     latMode: 'auto', latMs: 60, snap: true, textK: 1, nudgeMs: 0, guideClosed: false,
     view: { pps: 0, t0: -1 }
@@ -881,7 +908,7 @@ function makePeaks(buf) {
   for (let b = 0; b < n; b++) { let m = 0; const e = Math.min(d.length, (b + 1) * PEAK_BLOCK); for (let i = b * PEAK_BLOCK; i < e; i++) { const v = d[i] < 0 ? -d[i] : d[i]; if (v > m) m = v; } p[b] = m; }
   return p;
 }
-function registerBuffer(id, buf) { BUFS.set(id, { raw: buf, peaks: makePeaks(buf), proc: {}, pending: new Set() }); }
+function registerBuffer(id, buf, pre) { BUFS.set(id, { raw: buf, peaks: makePeaks(buf), proc: {}, pending: new Set(), pre: pre || 0 }); }
 
 /* undo / redo (clip layout only; audio stays in BUFS) */
 const undoStack = [], redoStack = [];
@@ -920,7 +947,7 @@ async function saveNow() {
   } catch (e) { console.error(e); }
 }
 const beatKey = () => 'beat:' + project.id;
-async function saveBuffer(id, buf) { try { await IDB.put('audio', id, { sr: buf.sampleRate, data: buf.getChannelData(0) }); } catch (e) { console.error(e); toast('Take se nepodařilo uložit na disk (málo místa?).', 'warn'); } }
+async function saveBuffer(id, buf, pre) { try { await IDB.put('audio', id, { sr: buf.sampleRate, data: buf.getChannelData(0), pre: pre || 0 }); } catch (e) { console.error(e); toast('Take se nepodařilo uložit na disk (málo místa?).', 'warn'); } }
 
 /* =====================================================================
    5. AUDIO ENGINE
@@ -942,17 +969,53 @@ A.clickOut = ctx.createGain(); A.clickOut.gain.value = 0.6; A.clickOut.connect(A
 A.guideOut = ctx.createGain(); A.guideOut.gain.value = 0.7; A.guideOut.connect(A.limiter);
 A.beatIn = ctx.createGain(); A.beatVol = ctx.createGain(); A.beatMg = ctx.createGain(); A.beatAn = ctx.createAnalyser(); A.beatAn.fftSize = 512;
 A.beatIn.connect(A.beatVol); A.beatVol.connect(A.beatMg); A.beatMg.connect(A.master); A.beatMg.connect(A.beatAn);
+/* room for the voice: while you rap, the beat's presence band (around 2.8 kHz) dips a few dB, the rest of the beat stays untouched.
+   y = beat + bandpass(beat) * g, g = -depth * vocal envelope (the envelopes arrive scheduled with every clip) */
+function carvePath(c, from, to) { const bp = bq(c, 'bandpass', 2800, 0.75), g = c.createGain(), inp = c.createGain(); g.gain.value = 0; from.connect(bp); bp.connect(g); g.connect(to); inp.connect(g.gain); return { bp, g, inp }; }
+A.carve = carvePath(ctx, A.beatIn, A.beatVol); A.carveIn = A.carve.inp;
 A.chains = {};
 
 const IRS = new WeakMap();
-const IR_LEN = { room: 0.8, studio: 1.7, hall: 3.4 };
+/* Reverb impulse responses built like a real space: early reflections, then a dense tail that decays faster in the highs
+   than in the lows (air and walls absorb treble), left and right decorrelated. RT60 per band: low / mid / high. */
+const IR_SPEC = { room: { len: 0.9, rt: [0.7, 0.55, 0.32], er: [0.006, 0.03] }, studio: { len: 2.0, rt: [1.5, 1.25, 0.7], er: [0.004, 0.022] }, hall: { len: 3.8, rt: [3.0, 2.5, 1.3], er: [0.012, 0.06] } };
 function getIR(c, size) {
   let m = IRS.get(c); if (!m) { m = {}; IRS.set(c, m); }
   if (m[size]) return m[size];
-  const len = Math.round(c.sampleRate * IR_LEN[size]), b = c.createBuffer(2, len, c.sampleRate);
-  for (let ch = 0; ch < 2; ch++) { const d = b.getChannelData(ch); let lp = 0; for (let i = 0; i < len; i++) { const t = i / len; lp = lp * 0.55 + (Math.random() * 2 - 1) * 0.45; d[i] = lp * Math.pow(1 - t, 2.4) * (i < c.sampleRate * 0.004 ? i / (c.sampleRate * 0.004) : 1); } }
+  const S = IR_SPEC[size] || IR_SPEC.room, sr = c.sampleRate, len = Math.round(sr * S.len), b = c.createBuffer(2, len, sr);
+  let seed = size.length * 7919 + 13; const rnd = () => { seed = (seed * 16807) % 2147483647; return seed / 1073741823.5 - 1; };
+  const aL = Math.exp(-2 * Math.PI * 450 / sr), aH = Math.exp(-2 * Math.PI * 3800 / sr), aT = Math.exp(-2 * Math.PI * 11000 / sr);
+  const k = S.rt.map(rt => 6.91 / (rt * sr)), fade = Math.round(sr * 0.003);
+  let energy = 0;
+  for (let ch = 0; ch < 2; ch++) {
+    const d = b.getChannelData(ch); let lo = 0, mid = 0, tl = 0;
+    for (let i = 0; i < len; i++) {
+      const w = rnd(); lo = aL * lo + (1 - aL) * w; mid = aH * mid + (1 - aH) * w; const hi = w - mid, md = mid - lo;
+      let v = lo * Math.exp(-k[0] * i) * 1.4 + md * Math.exp(-k[1] * i) + hi * Math.exp(-k[2] * i) * 0.8;
+      tl = aT * tl + (1 - aT) * v; v = tl;
+      d[i] = v * (i < fade ? i / fade : 1) * (i > len - sr * 0.05 ? (len - i) / (sr * 0.05) : 1);
+    }
+    for (let r = 0; r < 12; r++) { const at = Math.round(sr * (S.er[0] + (S.er[1] - S.er[0]) * Math.abs(rnd()))), g = (0.55 - r * 0.03) * (rnd() > 0 ? 1 : -1); if (at < len) d[at] += g * 0.25; }
+    for (let i = 0; i < len; i++) energy += d[i] * d[i];
+  }
+  // same overall energy per size as the earlier, simpler reverb, so existing mixes keep their balance
+  const norm = Math.sqrt((sr * ({ room: 0.0267, studio: 0.0568, hall: 0.1136 }[size] || 0.0267)) / (energy + 1e-12));
+  for (let ch = 0; ch < 2; ch++) { const d = b.getChannelData(ch); for (let i = 0; i < len; i++) d[i] *= norm; }
   m[size] = b; return b;
 }
+/* vocal envelope for the effect ducking and the beat carve: 0 in pauses, -1 while you rap (10 ms look-ahead, 160 ms release), 3 kHz */
+const ENVS = new WeakMap();
+function vocalEnv(buf) {
+  let e = ENVS.get(buf); if (e) return e;
+  const sr = buf.sampleRate, d = buf.getChannelData(0), R = 3000, step = sr / R, n = Math.max(2, Math.floor(d.length / step)), env = new Float32Array(n);
+  const rel = Math.exp(-1 / (R * 0.16)); let s = 0;
+  for (let j = 0; j < n; j++) { let mx = 0; const a = Math.floor(j * step), b = Math.min(d.length, Math.floor((j + 1) * step)); for (let i = a; i < b; i++) { const v = d[i] < 0 ? -d[i] : d[i]; if (v > mx) mx = v; } s = mx > s ? mx : s * rel; env[j] = 20 * Math.log10(s + 1e-9); }
+  const hi = Float32Array.from(env).sort()[Math.floor(n * 0.97)], lo = hi - 30, top = hi - 10, look = Math.round(R * 0.01);
+  e = ctx.createBuffer(1, n, R); const o = e.getChannelData(0);
+  for (let j = 0; j < n; j++) { let mx = -300; for (let q = j; q < Math.min(n, j + look); q++) if (env[q] > mx) mx = env[q]; o[j] = -clamp((mx - lo) / (top - lo), 0, 1); }
+  ENVS.set(buf, e); return e;
+}
+const carveDepth = () => clamp(project.carve == null ? 0.5 : project.carve, 0, 1) * 0.55;
 const curveCache = {};
 /* Soft saturation. The shaper input is pre-scaled by 1/4, so the curve covers ±4 of real signal:
    loud peaks bend smoothly instead of hitting the curve's end (which used to hard-clip = crackle). */
@@ -966,54 +1029,89 @@ function satCurve(a) {
 const NOTE_BEATS = { '1/8': 0.5, '3/16': 0.75, '1/4': 1, '1/2': 2 };   // delay synced to the song tempo
 const noteSec = k => Math.min(1.99, (NOTE_BEATS[k] || 0.5) * BEAT);
 function bq(c, type, f, q) { const b = c.createBiquadFilter(); b.type = type; b.frequency.value = f; if (q) b.Q.value = q; return b; }
-function buildChain(c, fx, dest, live) {
-  const n = { c };
+/* match EQ: the "Profi zvuk" assistant fits these 8 bands so the take's long-term tone lands on a pro rap vocal curve */
+const MEQ = [['lowshelf', 90], ['peaking', 180, 1.1], ['peaking', 350, 1.1], ['peaking', 700, 1.1], ['peaking', 1400, 1.1], ['peaking', 2800, 1.1], ['peaking', 5600, 1.1], ['highshelf', 11000]];
+/* the "before" of the A/B switch: the raw take, same level and pan, nothing else */
+const neutralFx = f => ({ ...f, hp: { on: false, f: 10 }, tel: false, deess: 0, eq: { low: 0, mid: 0, air: 0 }, meq: MEQ.map(() => 0), comp: { on: false, amt: 0 }, sat: 0, excite: 0, dbl: 0, duck: 0, rev: { ...f.rev, amt: 0 }, dly: { ...f.dly, amt: 0 } });
+function satCurveSoft() { if (curveCache.ex) return curveCache.ex; const n = 2048, c = new Float32Array(n); for (let i = 0; i < n; i++) { const X = (i / (n - 1) * 2 - 1) * 3; c[i] = Math.tanh(X); } return (curveCache.ex = c); }
+function buildChain(c, fx, dest, live, carveIn, role) {
+  const n = { c, oscs: [], role };
   n.input = c.createGain();
-  n.hp = bq(c, 'highpass', 10, 0.707); n.tHP = bq(c, 'highpass', 10, 0.707); n.tLP = bq(c, 'lowpass', 20000, 0.707);
+  n.hp = bq(c, 'highpass', 10, 0.707); n.hp2 = bq(c, 'highpass', 10, 0.707);        // 24 dB/oct: rumble and handling noise gone, voice untouched
+  n.tHP = bq(c, 'highpass', 10, 0.707); n.tLP = bq(c, 'lowpass', 20000, 0.707);
+  n.meq = MEQ.map(([type, f, q]) => bq(c, type, f, q));
   n.low = bq(c, 'lowshelf', 220); n.mid = bq(c, 'peaking', 3200, 0.9); n.air = bq(c, 'highshelf', 9500);
   n.deess = bq(c, 'peaking', 6800, 1.8);
-  n.comp = c.createDynamicsCompressor(); n.comp.knee.value = 10; n.comp.attack.value = 0.005; n.comp.release.value = 0.12;
+  // two compressors in series, like a studio 1176 into an LA-2A: the first only catches peaks fast, the second rides gently
+  n.comp = c.createDynamicsCompressor(); n.comp.knee.value = 6; n.comp.attack.value = 0.0015; n.comp.release.value = 0.06;
+  n.comp2 = c.createDynamicsCompressor(); n.comp2.knee.value = 14; n.comp2.attack.value = 0.018; n.comp2.release.value = 0.28;
   n.make = c.createGain();
   n.satPre = c.createGain(); n.satPre.gain.value = 0.25; n.sat = c.createWaveShaper(); n.sat.oversample = '4x';
   n.satWet = c.createGain(); n.satDry = c.createGain();
+  // air exciter: only the top octave is saturated, so it adds sheen without harshness
+  n.exHP = bq(c, 'highpass', 4800, 0.7); n.exPre = c.createGain(); n.exPre.gain.value = 3; n.exSh = c.createWaveShaper(); n.exSh.curve = satCurveSoft(); n.exSh.oversample = '4x'; n.exHP2 = bq(c, 'highpass', 3500, 0.7); n.exG = c.createGain();
   n.vol = c.createGain(); n.pan = c.createStereoPanner(); n.mg = c.createGain();
-  n.input.connect(n.hp); n.hp.connect(n.tHP); n.tHP.connect(n.tLP); n.tLP.connect(n.low); n.low.connect(n.mid); n.mid.connect(n.air); n.air.connect(n.deess);
-  n.deess.connect(n.comp); n.comp.connect(n.make);
+  let prev = n.input; for (const node of [n.hp, n.hp2, n.tHP, n.tLP, ...n.meq, n.low, n.mid, n.air, n.deess, n.comp, n.comp2, n.make]) { prev.connect(node); prev = node; }
   n.make.connect(n.satPre); n.satPre.connect(n.sat); n.sat.connect(n.satWet); n.satWet.connect(n.vol);
   n.make.connect(n.satDry); n.satDry.connect(n.vol);
+  n.make.connect(n.exHP); n.exHP.connect(n.exPre); n.exPre.connect(n.exSh); n.exSh.connect(n.exHP2); n.exHP2.connect(n.exG); n.exG.connect(n.vol);
   n.vol.connect(n.pan); n.pan.connect(n.mg); n.mg.connect(dest);
-  n.rSend = c.createGain(); n.pre = c.createDelay(0.3); n.pre.delayTime.value = 0.022; n.conv = c.createConvolver(); n.rRet = c.createGain(); n.rRet.gain.value = 0.9;
-  n.pan.connect(n.rSend); n.rSend.connect(n.pre); n.pre.connect(n.conv); n.conv.connect(n.rRet); n.rRet.connect(n.mg);
-  n.dSend = c.createGain(); n.dl = c.createDelay(2); n.fb = c.createGain(); n.dLP = bq(c, 'lowpass', 4200); n.dRet = c.createGain();
-  n.pan.connect(n.dSend); n.dSend.connect(n.dl); n.dl.connect(n.dLP); n.dLP.connect(n.fb); n.fb.connect(n.dl); n.dLP.connect(n.dRet); n.dRet.connect(n.mg);
+  // doubler: two short, slowly drifting copies hard left and right (an ADT, the classic "double-tracked" width)
+  n.dblHP = bq(c, 'highpass', 220, 0.7); n.vol.connect(n.dblHP); n.dblG = c.createGain(); n.dblHP.connect(n.dblG);
+  [[0.0125, 0.31, 0.0011, -0.85], [0.0195, 0.23, 0.0014, 0.85]].forEach(([d, rate, depth, pan]) => {
+    const dl = c.createDelay(0.05); dl.delayTime.value = d; const o = c.createOscillator(); o.frequency.value = rate; const og = c.createGain(); og.gain.value = depth; o.connect(og); og.connect(dl.delayTime); o.start(0); n.oscs.push(o);
+    const pn = c.createStereoPanner(); pn.pan.value = pan; n.dblG.connect(dl); dl.connect(pn); pn.connect(n.mg);
+  });
+  // effects get out of the way while you rap: the vocal's own envelope (scheduled with each clip) pulls the returns down
+  n.envIn = c.createGain(); n.duckIn = c.createGain(); n.rDuck = c.createGain(); n.dDuck = c.createGain(); n.envIn.connect(n.duckIn); n.duckIn.connect(n.rDuck.gain); n.duckIn.connect(n.dDuck.gain);
+  n.carveW = c.createGain(); n.envIn.connect(n.carveW); if (carveIn) n.carveW.connect(carveIn);
+  // vocal plate: pre-delay in tempo, filtered in and out so it never muddies or fizzes
+  n.rSend = c.createGain(); n.pre = c.createDelay(0.3); n.pre.delayTime.value = 0.04; n.rHP = bq(c, 'highpass', 260, 0.7); n.conv = c.createConvolver(); n.rLP = bq(c, 'lowpass', 8500, 0.7); n.rRet = c.createGain(); n.rRet.gain.value = 0.9;
+  n.pan.connect(n.rSend); n.rSend.connect(n.pre); n.pre.connect(n.rHP); n.rHP.connect(n.conv); n.conv.connect(n.rLP); n.rLP.connect(n.rRet); n.rRet.connect(n.rDuck); n.rDuck.connect(n.mg);
+  // ping-pong delay: 1st echo centre, then right, left, centre…; band-limited in the loop so the repeats stay dark and out of the vocal's range
+  n.dSend = c.createGain(); n.dHP = bq(c, 'highpass', 320, 0.7); n.dLP = bq(c, 'lowpass', 4200); n.dRet = c.createGain(); n.dMerge = c.createChannelMerger(2);
+  n.dl = c.createDelay(2); n.dl2 = c.createDelay(2); n.dl3 = c.createDelay(2); n.fb = c.createGain(); n.fb2 = c.createGain(); n.fb3 = c.createGain(); n.dC = c.createGain(); n.dC.gain.value = 0.72;
+  n.vol.connect(n.dSend); n.dSend.connect(n.dHP); n.dHP.connect(n.dl); n.dl.connect(n.dLP); n.dLP.connect(n.dC); n.dC.connect(n.dMerge, 0, 0); n.dC.connect(n.dMerge, 0, 1);
+  n.dLP.connect(n.fb); n.fb.connect(n.dl2); n.dl2.connect(n.dMerge, 0, 1); n.dl2.connect(n.fb2); n.fb2.connect(n.dl3); n.dl3.connect(n.dMerge, 0, 0); n.dl3.connect(n.fb3); n.fb3.connect(n.dHP);
+  n.dMerge.connect(n.dRet); n.dRet.connect(n.dDuck); n.dDuck.connect(n.mg);
   if (live) { n.an = c.createAnalyser(); n.an.fftSize = 512; n.mg.connect(n.an); }
   n.size = null;
-  n.set = (f, instant) => {
-    const now = c.currentTime;
+  n.set = (f0, instant) => {
+    const f = AB.raw ? neutralFx(f0) : f0, now = c.currentTime;
     const P = (p, v) => { if (instant) p.value = v; else p.setTargetAtTime(v, now, 0.02); };
-    P(n.hp.frequency, f.hp.on ? f.hp.f : 10);
+    P(n.hp.frequency, f.hp.on ? f.hp.f : 10); P(n.hp2.frequency, f.hp.on ? f.hp.f : 10);
     P(n.tHP.frequency, f.tel ? 480 : 10); P(n.tLP.frequency, f.tel ? 3000 : 20000);
+    const mq = f.meq || [], ma = f.meqAmt == null ? 1 : f.meqAmt; n.meq.forEach((b, i) => P(b.gain, (mq[i] || 0) * ma));
     P(n.low.gain, f.eq.low); P(n.mid.gain, f.eq.mid); P(n.air.gain, f.eq.air);
-    P(n.deess.gain, -(f.deess || 0) * 9);
-    P(n.comp.threshold, f.comp.on ? -6 - f.comp.amt * 22 : 0); P(n.comp.ratio, f.comp.on ? 1.5 + f.comp.amt * 6 : 1);
-    P(n.make.gain, f.comp.on ? dbToLin(f.comp.amt * 8) : 1);
+    P(n.deess.gain, -(f.deess || 0) * (cleanOn(f) ? 2 : 9));          // the real de-esser runs on the take itself (clean-up); this is only a gentle tilt
+    const a = f.comp.on ? f.comp.amt : 0;
+    P(n.comp.threshold, f.comp.on ? -8 - a * 14 : 0); P(n.comp.ratio, f.comp.on ? 2.5 + a * 5 : 1);
+    P(n.comp2.threshold, f.comp.on ? -12 - a * 14 : 0); P(n.comp2.ratio, f.comp.on ? 1.5 + a * 2 : 1);
+    P(n.make.gain, f.comp.on ? dbToLin(a * 9) : 1);
     n.sat.curve = satCurve(f.sat);
     P(n.satWet.gain, f.sat > 0.001 ? f.sat : 0); P(n.satDry.gain, f.sat > 0.001 ? 1 - f.sat : 1);
+    P(n.exG.gain, (f.excite || 0) * 0.32);
+    P(n.dblG.gain, (f.dbl || 0) * 0.55);
     P(n.vol.gain, f.vol); P(n.pan.pan, f.pan);
-    P(n.rSend.gain, f.rev.amt);
+    P(n.duckIn.gain, f.duck || 0); P(n.carveW.gain, CARVE_W[n.role] || 0);
+    P(n.rSend.gain, f.rev.amt); P(n.pre.delayTime, clamp(BEAT / 8, 0.02, 0.08));
     if (n.size !== f.rev.size) { n.conv.buffer = getIR(c, f.rev.size); n.size = f.rev.size; }
-    P(n.dSend.gain, f.dly.amt); P(n.dl.delayTime, noteSec(f.dly.time)); P(n.fb.gain, f.dly.fb);
+    const dt = noteSec(f.dly.time), fb = Math.min(0.85, f.dly.fb);
+    P(n.dSend.gain, f.dly.amt); P(n.dl.delayTime, dt); P(n.dl2.delayTime, dt); P(n.dl3.delayTime, dt); P(n.fb.gain, fb); P(n.fb2.gain, fb); P(n.fb3.gain, fb);
   };
   n.set(fx, true);
   return n;
 }
-function initChains() { project.tracks.forEach(t => { A.chains[t.id] = buildChain(ctx, t.fx, A.master, true); }); }
+/* how much each track opens room for itself in the beat (lead + hook sum to 1, so two at once never over-cut) */
+const CARVE_W = { lead: 0.65, mel: 0.35, dbl: 0, adl: 0 };
+function initChains() { project.tracks.forEach(t => { A.chains[t.id] = buildChain(ctx, t.fx, A.master, true, A.carveIn, t.id); }); }
 function applyMix() {
   const anySolo = project.tracks.some(t => t.solo);
   project.tracks.forEach(t => { const ch = A.chains[t.id]; if (ch) ch.mg.gain.setTargetAtTime(t.mute || (anySolo && !t.solo) ? 0 : 1, ctx.currentTime, 0.01); });
   A.beatVol.gain.setTargetAtTime(project.beatVol, ctx.currentTime, 0.01);
   A.beatMg.gain.setTargetAtTime(project.beatMute || anySolo ? 0 : 1, ctx.currentTime, 0.01);
   A.master.gain.setTargetAtTime(project.master, ctx.currentTime, 0.01);
+  A.carve.inp.gain.setTargetAtTime(AB.raw ? 0 : carveDepth(), ctx.currentTime, 0.02);
 }
 
 /* ---------- guide beat synth ---------- */
@@ -1394,15 +1492,238 @@ function workerMain() {
     minpent: [0, 3, 5, 7, 10], majpent: [0, 2, 4, 7, 9], harmpent: [0, 3, 5, 7, 11], phrygpent: [0, 1, 4, 7, 8], gypsypent: [0, 3, 7, 8, 11] };
   const scalePcs = sc => { if (!sc || sc === 'chrom') return [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]; const [r, m] = sc.split(':'); const ri = Math.max(0, ROOTS.indexOf(r)); return (MODES[m] || MODES.minor).map(x => (x + ri) % 12); };
   self.onmessage = e => {
-    const { id, sr, data, s } = e.data;
+    const { id, sr, data, s, op, pre } = e.data;
     try {
-      let out = data;
+      if (op === 'analyze') { self.postMessage({ id, out: analyzeVoice(data, sr, pre || 0) }); return; }
+      let out = data, info = null;
+      if (s.clean) { const r = clean(out, sr, s.clean, s.pre || 0); out = r.y; info = r.info; }
       if (s.gate) out = gate(out, sr);
       if (s.tune || s.shift) out = psola(out, sr, s);
-      self.postMessage({ id, out }, [out.buffer]);
+      self.postMessage({ id, out, info }, [out.buffer]);
     }
-    catch (err) { self.postMessage({ id, error: String(err) }); }
+    catch (err) { self.postMessage({ id, error: String(err) + (err && err.stack ? ' ' + err.stack.split('\n')[1] : '') }); }
   };
+
+  /* ---------- radix-2 FFT (complex, in place) ---------- */
+  const plans = {};
+  function plan(N) {
+    if (plans[N]) return plans[N];
+    const bits = Math.round(Math.log2(N)), rev = new Uint32Array(N), cs = new Float64Array(N / 2), sn = new Float64Array(N / 2);
+    for (let i = 0; i < N; i++) { let r = 0; for (let b = 0; b < bits; b++) r |= ((i >> b) & 1) << (bits - 1 - b); rev[i] = r; }
+    for (let i = 0; i < N / 2; i++) { cs[i] = Math.cos(2 * Math.PI * i / N); sn[i] = -Math.sin(2 * Math.PI * i / N); }
+    const win = new Float32Array(N); for (let i = 0; i < N; i++) win[i] = Math.sqrt(0.5 - 0.5 * Math.cos(2 * Math.PI * i / N));   // sqrt-Hann: analysis x synthesis = Hann
+    return (plans[N] = { N, rev, cs, sn, win });
+  }
+  function fft(re, im, P, inv) {
+    const { N, rev, cs, sn } = P;
+    for (let i = 0; i < N; i++) { const j = rev[i]; if (j > i) { let t = re[i]; re[i] = re[j]; re[j] = t; t = im[i]; im[i] = im[j]; im[j] = t; } }
+    for (let size = 2; size <= N; size <<= 1) {
+      const half = size >> 1, step = N / size;
+      for (let i = 0; i < N; i += size) for (let k = 0; k < half; k++) {
+        const wr = cs[k * step], wi = inv ? -sn[k * step] : sn[k * step], a = i + k, b = a + half;
+        const xr = re[b] * wr - im[b] * wi, xi = re[b] * wi + im[b] * wr;
+        re[b] = re[a] - xr; im[b] = im[a] - xi; re[a] += xr; im[a] += xi;
+      }
+    }
+    if (inv) { const k = 1 / N; for (let i = 0; i < N; i++) { re[i] *= k; im[i] *= k; } }
+  }
+  const fftN = sr => sr > 32000 ? 2048 : 1024;
+  const pct = (arr, p) => { if (!arr.length) return -120; const s = Float32Array.from(arr).sort(); return s[Math.min(s.length - 1, Math.max(0, Math.floor(p * (s.length - 1))))]; };
+  const dB = v => 10 * Math.log10(v + 1e-20);
+
+  /* ---------- voice analysis: levels, room noise, sibilance, low end, tone (LTAS), pitch, onsets ---------- */
+  function hp1(x, sr, fc) { const a = Math.exp(-2 * Math.PI * fc / sr), y = new Float32Array(x.length); let y1 = 0, x1 = 0; for (let i = 0; i < x.length; i++) { const v = a * (y1 + x[i] - x1); x1 = x[i]; y1 = v; y[i] = v; } return y; }
+  function frameDb(x, w) { const F = Math.max(1, Math.floor(x.length / w)), e = new Float32Array(F); for (let f = 0; f < F; f++) { let a = 0; for (let i = f * w; i < (f + 1) * w; i++) a += x[i] * x[i]; e[f] = dB(a / w); } return e; }
+  function profile(x, sr, pre) {
+    const N = fftN(sr), H = N / 2, P = plan(N), nb = N / 2 + 1, df = sr / N, win = P.win;
+    const F = Math.max(0, Math.floor((x.length - N) / H) + 1);
+    const e = new Float32Array(F);
+    for (let f = 0; f < F; f++) { let a = 0; const o = f * H; for (let i = 0; i < N; i++) { const v = x[o + i]; a += v * v; } e[f] = dB(a / N); }
+    const live = Array.from(e).filter(v => v > -110);
+    const floorDb = pct(live, 0.1), maxDb = pct(live, 0.995), vth = Math.max(floorDb + 15, maxDb - 38);
+    // room noise: the count-in before the take when it is quiet, otherwise the quietest 10 % of the take
+    let nf = []; const preF = Math.floor((pre - N) / H) + 1;
+    if (preF >= 6) { const pe = Array.from(e.subarray(0, preF)); if (pct(pe, 0.5) < floorDb + 6) for (let f = 0; f < preF; f++) if (e[f] > -110 && e[f] < floorDb + 8) nf.push(f); }
+    if (nf.length < 6) for (let f = 0; f < F; f++) if (e[f] > -110 && e[f] <= floorDb + 3) nf.push(f);
+    if (nf.length > 400) { const k = nf.length / 400; nf = Array.from({ length: 400 }, (_, i) => nf[Math.floor(i * k)]); }
+    const re = new Float64Array(N), im = new Float64Array(N), noise = new Float32Array(nb), ltas = new Float32Array(nb);
+    const frameP = (o, outP) => { for (let i = 0; i < N; i++) { re[i] = x[o + i] * win[i]; im[i] = 0; } fft(re, im, P, false); for (let k = 0; k < nb; k++) outP[k] = re[k] * re[k] + im[k] * im[k]; };
+    const Pf = new Float32Array(nb);
+    for (const f of nf) { frameP(f * H, Pf); for (let k = 0; k < nb; k++) noise[k] += Pf[k] / nf.length; }
+    // voiced references (every 3rd voiced frame is plenty)
+    const bin = hz => Math.min(nb - 1, Math.max(1, Math.round(hz / df)));
+    const lf1 = bin(150), vb0 = bin(300), vb1 = bin(3500), sb0 = bin(5000), sb1 = bin(11000);
+    const lfs = [], ratios = [], lvls = []; let nv = 0, cnt = 0;
+    for (let f = 0; f < F; f++) {
+      if (e[f] < vth) continue; if ((cnt++) % 3) continue;
+      frameP(f * H, Pf);
+      let lf = 0, vb = 0, sb = 0; for (let k = 1; k <= lf1; k++) lf += Pf[k]; for (let k = vb0; k <= vb1; k++) vb += Pf[k]; for (let k = sb0; k <= sb1; k++) sb += Pf[k];
+      lfs.push(lf); ratios.push(dB(sb) - dB(vb)); lvls.push(dB(vb + sb));
+      for (let k = 0; k < nb; k++) ltas[k] += Pf[k]; nv++;
+    }
+    if (nv) for (let k = 0; k < nb; k++) ltas[k] /= nv;
+    return { N, nb, df, noise, ltas, nv, floorDb, maxDb, vth, lfRef: pct(lfs, 0.5), ratioMed: pct(ratios, 0.5), ratioP95: pct(ratios, 0.95), voicedLvl: pct(lvls, 0.5), e, F, H, nf: nf.length };
+  }
+  /* static cuts for narrow resonances (harsh ring of a room or mic, 2.2-9 kHz): narrow peaks of the long-term spectrum over its 1/3-octave average.
+     Below 2.2 kHz sit the vowel formants; those carry the words and are left alone. */
+  function resonanceCurve(pr, amt) {
+    const { nb, df, ltas } = pr, g = new Float32Array(nb).fill(1); if (!pr.nv || amt <= 0) return { g, cuts: [] };
+    const L = Float32Array.from(ltas, v => dB(v)), sm = new Float32Array(nb), fine = new Float32Array(nb);
+    const avg = (k, oct) => { const f = k * df, a = Math.max(1, Math.round(f * Math.pow(2, -oct / 2) / df)), b = Math.min(nb - 1, Math.round(f * Math.pow(2, oct / 2) / df)); let s = 0; for (let j = a; j <= b; j++) s += L[j]; return s / (b - a + 1); };
+    for (let k = 1; k < nb; k++) { sm[k] = avg(k, 1 / 3); fine[k] = avg(k, 1 / 12); }
+    const cut = new Float32Array(nb); const cuts = [];
+    for (let k = Math.round(2200 / df); k < Math.min(nb - 1, Math.round(9000 / df)); k++) {
+      const r = fine[k] - sm[k]; if (r > 4 && fine[k] >= fine[k - 1] && fine[k] >= fine[k + 1]) {
+        const c = Math.min(3, (r - 3.5) * 0.8) * amt; if (c < 0.6) continue;
+        cuts.push([Math.round(k * df), +c.toFixed(1)]);
+        for (let j = 1; j < nb; j++) { const oct = Math.log2((j * df) / (k * df)); const w = Math.exp(-0.5 * Math.pow(oct / 0.06, 2)); if (w > 0.01) cut[j] = Math.max(cut[j], c * w); }
+      }
+    }
+    for (let k = 0; k < nb; k++) g[k] = Math.pow(10, -cut[k] / 20);
+    return { g, cuts: cuts.sort((a, b) => b[1] - a[1]).slice(0, 6) };
+  }
+  function analyzeVoice(raw, sr, pre) {
+    const x = hp1(raw, sr, 30), pr = profile(x, sr, pre), w = Math.round(sr * 0.02);
+    let peak = 0, clip = 0, run = 0; for (let i = 0; i < raw.length; i++) { const v = Math.abs(raw[i]); if (v > peak) peak = v; if (v > 0.985) { if (++run === 3) clip++; } else run = 0; }
+    const fe = frameDb(x.subarray(Math.min(x.length, pre)), w), live = Array.from(fe).filter(v => v > -110);
+    const floor = pct(live, 0.1), mx = pct(live, 0.995), voiced = live.filter(v => v > Math.max(floor + 15, mx - 38));
+    const dc = declick(x, sr, true), bands = [], nb = pr.nb;
+    // 1/3-octave band levels of the voiced spectrum (for the match EQ)
+    const centers = [80, 100, 125, 160, 200, 250, 315, 400, 500, 630, 800, 1000, 1250, 1600, 2000, 2500, 3150, 4000, 5000, 6300, 8000, 10000, 12500, 16000];
+    for (const fc of centers) { const a = Math.max(1, Math.round(fc * Math.pow(2, -1 / 6) / pr.df)), b = Math.min(nb - 1, Math.round(fc * Math.pow(2, 1 / 6) / pr.df)); let s = 0; for (let k = a; k <= b; k++) s += pr.ltas[k]; bands.push(+dB(s).toFixed(2)); }
+    return { dur: raw.length / sr, peakDb: 20 * Math.log10(peak + 1e-9), clipped: clip, floorDb: floor, voicedDb: pct(voiced, 0.5), spread: voiced.length > 10 ? pct(voiced, 0.9) - pct(voiced, 0.2) : 0, voicedFrames: voiced.length,
+      ratioMed: pr.ratioMed, ratioP95: pr.ratioP95, clicks: dc.n, plosives: countPlosives(x, sr, pr), centers, bands, res: resonanceCurve(pr, 1).cuts, f0: pitchMedian(x, sr, pr), onsets: onsets(x, sr, pre) };
+  }
+  function countPlosives(x, sr, pr) {
+    const { N, H, nb, df, e, F, vth, lfRef } = pr, P = plan(N), re = new Float64Array(N), im = new Float64Array(N);
+    if (!(lfRef > 0)) return 0;
+    const lf1 = Math.max(1, Math.round(150 / df)), vb0 = Math.round(300 / df), vb1 = Math.round(3500 / df); let n = 0, hold = 0;
+    for (let f = 0; f < F; f++) {
+      if (hold > 0) { hold--; continue; } if (e[f] < vth - 6) continue;
+      for (let i = 0; i < N; i++) { re[i] = x[f * H + i] * P.win[i]; im[i] = 0; } fft(re, im, P, false);
+      let lf = 0, vb = 0; for (let k = 1; k <= lf1; k++) lf += re[k] * re[k] + im[k] * im[k]; for (let k = vb0; k <= vb1; k++) vb += re[k] * re[k] + im[k] * im[k];
+      if (lf > lfRef * 8 && lf > vb * 0.5) { n++; hold = 6; }
+    }
+    return n;
+  }
+  function pitchMedian(x, sr, pr) {
+    const D = Math.max(1, Math.round(sr / 8000)), W = Math.round(sr * 0.04 / D), out = [];
+    for (let f = 0; f < pr.F && out.length < 60; f += 7) {
+      if (pr.e[f] < pr.vth + 3) continue;
+      const o = f * pr.H, seg = new Float32Array(W + 300); for (let i = 0; i < seg.length; i++) seg[i] = x[o + i * D] || 0;
+      const srd = sr / D, lo = Math.floor(srd / 400), hi = Math.ceil(srd / 60); let best = 0, bl = 0, e0 = 0; for (let i = 0; i < W; i++) e0 += seg[i] * seg[i];
+      for (let L = lo; L <= hi; L++) { let s = 0, e1 = 0; for (let i = 0; i < W; i++) { s += seg[i] * seg[i + L]; e1 += seg[i + L] * seg[i + L]; } const r = s / Math.sqrt(e0 * e1 + 1e-12); if (r > best) { best = r; bl = L; } }
+      if (best > 0.6 && bl) out.push(srd / bl);
+    }
+    return out.length ? pct(out, 0.5) : 0;
+  }
+  /* syllable onsets: rises of the 300 Hz-6 kHz band energy (what the ear hears as the start of a syllable) */
+  function onsets(x, sr, pre) {
+    const h = Math.round(sr * 0.005), a1 = Math.exp(-2 * Math.PI * 300 / sr), a2 = Math.exp(-2 * Math.PI * 6000 / sr);
+    let hp = 0, xm = 0, lp = 0; const F = Math.floor(x.length / h), le = new Float32Array(F);
+    for (let f = 0; f < F; f++) { let s = 0; for (let i = f * h; i < (f + 1) * h; i++) { const v = x[i]; hp = a1 * (hp + v - xm); xm = v; lp = lp * a2 + hp * (1 - a2); s += lp * lp; } le[f] = Math.log(1e-10 + s / h); }
+    const fl = new Float32Array(F); for (let f = 2; f < F; f++) fl[f] = Math.max(0, le[f] - Math.max(le[f - 1], le[f - 2]));
+    const thr = pct(Array.from(fl).filter(v => v > 0), 0.9), mx = Math.max(...le), out = [], gap = Math.round(0.07 / 0.005);
+    let last = -1e9; for (let f = 2; f < F - 1; f++) if (fl[f] > thr && fl[f] >= fl[f - 1] && fl[f] >= fl[f + 1] && le[f] > mx - 9 && f - last >= gap && f * h >= pre) { out.push(+((f * h) / sr).toFixed(4)); last = f; }
+    return out;
+  }
+
+  /* ---------- clean-up chain ---------- */
+  /* clicks: a single-sample jump a voice cannot make; repaired by a smooth (Hermite) curve over ~0.1 ms */
+  function declick(x, sr, countOnly) {
+    const n = x.length, y = countOnly ? x : Float32Array.from(x), w = Math.round(sr * 0.005), d = new Float32Array(n), cs = new Float64Array(n + 1);
+    for (let i = 1; i < n - 1; i++) d[i] = Math.abs(x[i] - 0.5 * (x[i - 1] + x[i + 1]));
+    for (let i = 0; i < n; i++) cs[i + 1] = cs[i] + d[i];
+    let c = 0;
+    for (let i = 4; i < n - 4; i++) {
+      const a = Math.max(0, i - w), b = Math.min(n, i + w), loc = (cs[b] - cs[a]) / (b - a);
+      if (d[i] > 14 * loc + 0.004 && d[i] > 0.03) {
+        c++;
+        if (!countOnly) { const L = i - 3, R = i + 3, p0 = y[L], p1 = y[R], m0 = y[L] - y[L - 1], m1 = y[R + 1] - y[R], sp = R - L;
+          for (let k = L + 1; k < R; k++) { const t = (k - L) / sp, t2 = t * t, t3 = t2 * t; y[k] = (2 * t3 - 3 * t2 + 1) * p0 + (t3 - 2 * t2 + t) * m0 * sp + (-2 * t3 + 3 * t2) * p1 + (t3 - t2) * m1 * sp; } }
+        i += 6;
+      }
+    }
+    return { y, n: c };
+  }
+  /* one STFT pass: room noise (decision-directed Wiener), plosive pops, sibilance (split-band), resonances */
+  function stftClean(x, sr, c, pr, info) {
+    const { N, nb, df } = pr, H = N / 4, P = plan(N), win = P.win, len = x.length;
+    const xp = new Float32Array(len + 2 * N); xp.set(x, N);
+    const out = new Float32Array(xp.length), re = new Float64Array(N), im = new Float64Array(N);
+    const Pw = new Float32Array(nb), G = new Float32Array(nb), Gw = new Float32Array(nb), Gprev = new Float32Array(nb).fill(1), Pprev = new Float32Array(nb);
+    const frames = Math.floor((xp.length - N) / H) + 1;
+    const floor = Math.pow(10, -(6 + 16 * c.nr) / 20), over = 1 + 1.2 * c.nr, useNr = c.nr > 0.01 && pr.nf >= 4;
+    const bin = hz => Math.min(nb - 1, Math.max(1, Math.round(hz / df)));
+    const lf1 = bin(150), lfTop = bin(280), vb0 = bin(300), vb1 = bin(3500), sb0 = bin(5000), sb1 = bin(11000), sg0 = bin(3600), sg1 = bin(4800);
+    const res = c.res > 0 ? resonanceCurve(pr, c.res) : null; if (res) info.resCuts = res.cuts;
+    // an S has 10-30 dB more 5-11 kHz (vs the 300 Hz-3.5 kHz body) than a vowel: trigger well above the take's typical ratio, the amount sets how deep
+    const essThr = Math.max(pr.ratioMed + 12 - 4 * c.deess, pr.ratioP95 - 6), essMax = 3 + 9 * c.deess;
+    let plosG = 1, plosHold = 0, nPlos = 0, essDb = 0, essFrames = 0, essSum = 0, inPlos = false;
+    for (let f = 0; f < frames; f++) {
+      const o = f * H;
+      for (let i = 0; i < N; i++) { re[i] = xp[o + i] * win[i]; im[i] = 0; }
+      fft(re, im, P, false);
+      for (let k = 0; k < nb; k++) Pw[k] = re[k] * re[k] + im[k] * im[k];
+      // 1) room noise
+      if (useNr) {
+        for (let k = 0; k < nb; k++) { const Pn = pr.noise[k] * over + 1e-20, post = Pw[k] / Pn, prio = 0.97 * Gprev[k] * Gprev[k] * Pprev[k] / Pn + 0.03 * Math.max(post - 1, 0); Gw[k] = prio / (1 + prio); }
+        for (let k = 0; k < nb; k++) { Gprev[k] = Gw[k]; Pprev[k] = Pw[k]; }
+        for (let k = 0; k < nb; k++) { const s = (Gw[k > 0 ? k - 1 : 0] + 2 * Gw[k] + Gw[k < nb - 1 ? k + 1 : k]) / 4; G[k] = s > floor ? s : floor; }
+      } else G.fill(1);
+      // 2) plosives (P, B): a low-end burst far above this take's normal voiced low end
+      if (c.plos && pr.lfRef > 0) {
+        let lf = 0, vb = 0; for (let k = 1; k <= lf1; k++) lf += Pw[k] * G[k] * G[k]; for (let k = vb0; k <= vb1; k++) vb += Pw[k] * G[k] * G[k];
+        const ovr = lf / pr.lfRef;
+        if (ovr > 8 && lf > vb * 0.5) { plosG = Math.min(plosG, Math.sqrt(3 / ovr)); plosHold = 4; if (!inPlos) { nPlos++; inPlos = true; } }
+        else if (plosHold > 0) plosHold--; else { plosG = Math.min(1, plosG * 1.5); inPlos = false; }
+        if (plosG < 0.999) for (let k = 0; k <= lfTop; k++) G[k] *= k <= lf1 ? plosG : plosG + (1 - plosG) * (k - lf1) / (lfTop - lf1);
+      }
+      // 3) sibilance: only the S/Š/C band, only when it sticks out of the voice
+      if (c.deess > 0.01) {
+        let es = 0, ev = 0, en = 0; for (let k = sb0; k <= sb1; k++) { const g2 = G[k] * G[k]; es += Pw[k] * g2; en += pr.noise[k] * g2; } for (let k = vb0; k <= vb1; k++) ev += Pw[k] * G[k] * G[k];
+        const r = dB(es) - dB(ev), lvl = dB(es + ev); let want = 0;
+        // a real S: loud (near the voice's level), well above the room noise in that band, and sticking out of the voice
+        if (lvl > pr.voicedLvl - 14 && es > en * 6 && r > essThr) want = Math.min(essMax, r - essThr);
+        essDb = want > essDb ? want : essDb * 0.55 + want * 0.45;
+        if (essDb > 0.4) { const g = Math.pow(10, -essDb / 20); for (let k = sg0; k < nb; k++) G[k] *= k >= sg1 ? g : 1 - (1 - g) * (k - sg0) / (sg1 - sg0); essFrames++; essSum += essDb; }
+      }
+      // 4) resonances
+      if (res) for (let k = 0; k < nb; k++) G[k] *= res.g[k];
+      for (let k = 0; k < nb; k++) { re[k] *= G[k]; im[k] *= G[k]; }
+      for (let k = 1; k < N / 2; k++) { re[N - k] = re[k]; im[N - k] = -im[k]; }
+      fft(re, im, P, true);
+      for (let i = 0; i < N; i++) out[o + i] += re[i] * win[i];
+    }
+    const y = new Float32Array(len); for (let i = 0; i < len; i++) y[i] = out[i + N] * 0.5;   // Hann at 75 % overlap sums to 2
+    info.plosives = nPlos; info.essFrames = Math.round(essFrames * H / sr * 1000); info.essAvgDb = essFrames ? +(essSum / essFrames).toFixed(1) : 0;
+    return y;
+  }
+  /* level riding: every syllable toward the take's typical level (±6 dB), pauses untouched, smoothed so it never pumps */
+  function ride(x, sr, amt) {
+    const w = Math.round(sr * 0.02), e = frameDb(x, w), F = e.length, live = Array.from(e).filter(v => v > -110);
+    const floor = pct(live, 0.1), mx = pct(live, 0.995), vth = Math.max(floor + 14, mx - 36), voiced = live.filter(v => v > vth);
+    if (voiced.length < 20) return { y: x, before: 0, after: 0 };
+    const target = pct(voiced, 0.55), g = new Float32Array(F);
+    for (let f = 0; f < F; f++) if (e[f] > vth) { let d = (target - e[f]) * amt; d = Math.max(-6, Math.min(e[f] < target - 18 ? 3 : 6, d)); g[f] = d; }
+    const a = Math.exp(-1 / (0.06 / 0.02)); let s = 0; for (let f = 0; f < F; f++) { s = a * s + (1 - a) * g[f]; g[f] = s; } s = 0; for (let f = F - 1; f >= 0; f--) { s = a * s + (1 - a) * g[f]; g[f] = s; }
+    const y = new Float32Array(x.length);
+    for (let i = 0; i < x.length; i++) { const fp = i / w - 0.5, f0 = Math.max(0, Math.min(F - 1, Math.floor(fp))), f1 = Math.min(F - 1, f0 + 1), t = Math.max(0, Math.min(1, fp - f0)); y[i] = x[i] * Math.pow(10, (g[f0] * (1 - t) + g[f1] * t) / 20); }
+    const e2 = frameDb(y, w), v2 = []; for (let f = 0; f < F; f++) if (e[f] > vth) v2.push(e2[f]);
+    return { y, before: pct(voiced, 0.9) - pct(voiced, 0.2), after: pct(v2, 0.9) - pct(v2, 0.2) };
+  }
+  function clean(raw, sr, c, pre) {
+    const info = {};
+    if (raw.length < sr * 0.2) return { y: raw, info };
+    let x = hp1(raw, sr, 30);
+    if (c.click) { const r = declick(x, sr, false); x = r.y; info.clicks = r.n; }
+    const pr = profile(x, sr, pre);
+    info.floorBefore = pr.floorDb;
+    let y = (c.nr > 0.01 || c.plos || c.deess > 0.01 || c.res > 0) ? stftClean(x, sr, c, pr, info) : x;
+    if (c.rider > 0.01) { const r = ride(y, sr, c.rider); y = r.y; info.spreadBefore = +r.before.toFixed(1); info.spreadAfter = +r.after.toFixed(1); }
+    const fe = frameDb(y, Math.round(sr * 0.02)); info.floorAfter = pct(Array.from(fe).filter(v => v > -110), 0.1);
+    return { y, info };
+  }
   /* Noise gate for the pauses between lines: room hiss and breath noise drop by ~24 dB, the voice stays untouched. */
   function gate(x, sr) {
     const N = x.length, w = Math.max(1, Math.round(sr * 0.01)), F = Math.ceil(N / w);
@@ -1495,7 +1816,13 @@ function workerMain() {
 }
 const pitchWorker = new Worker(URL.createObjectURL(new Blob(['(' + workerMain.toString() + ')()'], { type: 'application/javascript' })));
 const pJobs = new Map(); let pSeq = 0;
-pitchWorker.onmessage = e => { const j = pJobs.get(e.data.id); if (!j) return; pJobs.delete(e.data.id); e.data.error ? j.rej(new Error(e.data.error)) : j.res(e.data.out); };
+pitchWorker.onmessage = e => { const j = pJobs.get(e.data.id); if (!j) return; pJobs.delete(e.data.id); e.data.error ? j.rej(new Error(e.data.error)) : j.res(e.data); };
+/* measure a take in the worker (levels, noise, sibilance, plosives, clicks, tone, pitch, onsets) */
+function analyzeTake(bufId, useProc) {
+  const B = BUFS.get(bufId); if (!B) return Promise.resolve(null);
+  const src = useProc && B.proc[useProc] ? B.proc[useProc] : B.raw, data = src.getChannelData(0).slice();
+  return new Promise((res, rej) => { const id = ++pSeq; pJobs.set(id, { res, rej }); pitchWorker.postMessage({ id, op: 'analyze', sr: src.sampleRate, data, pre: Math.round((B.pre || 0) * src.sampleRate) }, [data.buffer]); }).then(d => d.out).catch(e => { console.error(e); return null; });
+}
 /* 'song' = the song's key, 'songpent' = its pentatonic (robot sound); legacy 'Em'/'Epent' from the first version */
 function resolveScale(sc) {
   const key = SONG.key || 'E:minor', [r, m] = key.split(':');
@@ -1503,7 +1830,9 @@ function resolveScale(sc) {
   if (sc === 'songpent' || sc === 'Epent') return sc === 'Epent' ? 'E:minpent' : r + ':' + ({ major: 'majpent', harm: 'harmpent', phryg: 'phrygpent', gypsy: 'gypsypent' }[m] || 'minpent');
   return sc || 'chrom';
 }
-const procKey = fx => (fx.gate ? 'g' : '') + ((fx.tune.on || fx.shift) ? '|' + [fx.tune.on ? 1 : 0, resolveScale(fx.tune.scale), fx.tune.speed.toFixed(2), fx.tune.amount.toFixed(2), fx.shift].join('|') : '');
+const cleanOn = fx => !AB.raw && fx.clean && fx.clean.on;
+const cleanSpec = fx => cleanOn(fx) ? { nr: fx.clean.nr, click: !!fx.clean.click, plos: !!fx.clean.plos, deess: fx.deess || 0, res: fx.clean.res || 0, rider: fx.clean.rider || 0 } : null;
+const procKey = fx => { if (AB.raw) return ''; const c = cleanSpec(fx); return (c ? 'c' + [c.nr, +c.click, +c.plos, c.deess, c.res, c.rider].map(v => (+v).toFixed(2)).join(',') : '') + (fx.gate ? 'g' : '') + ((fx.tune.on || fx.shift) ? '|' + [fx.tune.on ? 1 : 0, resolveScale(fx.tune.scale), fx.tune.speed.toFixed(2), fx.tune.amount.toFixed(2), fx.shift].join('|') : ''); };
 function processBuffer(bufId, fx) {
   const key = procKey(fx), B = BUFS.get(bufId);
   if (!key || !B) return Promise.resolve(B ? B.raw : null);
@@ -1511,8 +1840,8 @@ function processBuffer(bufId, fx) {
   if (B.jobs && B.jobs[key]) return B.jobs[key];
   B.jobs = B.jobs || {};
   const data = B.raw.getChannelData(0).slice();
-  const p = new Promise((res, rej) => { const id = ++pSeq; pJobs.set(id, { res, rej }); pitchWorker.postMessage({ id, sr: B.raw.sampleRate, data, s: { gate: !!fx.gate, tune: fx.tune.on, scale: resolveScale(fx.tune.scale), speed: fx.tune.speed, amount: fx.tune.amount, shift: fx.shift } }, [data.buffer]); })
-    .then(out => { const b = ctx.createBuffer(1, out.length, B.raw.sampleRate); b.copyToChannel(out, 0); const keys = Object.keys(B.proc); if (keys.length > 2) delete B.proc[keys[0]]; B.proc[key] = b; delete B.jobs[key]; return b; })
+  const p = new Promise((res, rej) => { const id = ++pSeq; pJobs.set(id, { res, rej }); pitchWorker.postMessage({ id, sr: B.raw.sampleRate, data, s: { clean: cleanSpec(fx), pre: Math.round((B.pre || 0) * B.raw.sampleRate), gate: !!fx.gate, tune: fx.tune.on, scale: resolveScale(fx.tune.scale), speed: fx.tune.speed, amount: fx.tune.amount, shift: fx.shift } }, [data.buffer]); })
+    .then(d => { const out = d.out; const b = ctx.createBuffer(1, out.length, B.raw.sampleRate); b.copyToChannel(out, 0); const keys = Object.keys(B.proc); if (keys.length > 2) { delete B.proc[keys[0]]; if (B.info) delete B.info[keys[0]]; } B.proc[key] = b; (B.info = B.info || {})[key] = d.info; delete B.jobs[key]; return b; })
     .catch(err => { console.error(err); delete B.jobs[key]; return B.raw; });
   B.jobs[key] = p; return p;
 }
@@ -1542,7 +1871,7 @@ let liveSrcs = [];
 const tNow = () => st.playing ? st.Tstart + (ctx.currentTime - st.startCtx) * st.rate : st.T;
 const tVis = () => (st.playing ? st.Tstart + (ctx.currentTime - (ctx.outputLatency || 0) - st.startCtx) * st.rate : st.T) + project.nudgeMs / 1000;
 function stopSources() { liveSrcs.forEach(s => { try { s.stop(); } catch (e) {} }); liveSrcs = []; }
-function scheduleClip(c, dest, clip, track, T, when0, rate, list) {
+function scheduleClip(c, dest, clip, track, T, when0, rate, list, ch) {
   const end = clip.start + clip.dur; if (end <= T + 0.002) return;
   const buf = list ? playableBuffer(clip.buf, track.fx) : (BUFS.get(clip.buf) && (BUFS.get(clip.buf).proc[procKey(track.fx)] || BUFS.get(clip.buf).raw));
   if (!buf) return;
@@ -1558,6 +1887,7 @@ function scheduleClip(c, dest, clip, track, T, when0, rate, list) {
   src.connect(g); g.connect(dest);
   src.start(when, off, Math.min(dur, buf.duration - off));
   if (list) list.push(src);
+  if (ch && !AB.raw && ((track.fx.duck || 0) > 0.01 || CARVE_W[track.id])) { const es = c.createBufferSource(); es.buffer = vocalEnv(buf); es.playbackRate.value = rate; es.connect(ch.envIn); es.start(when, off, Math.min(dur, buf.duration - off)); if (list) list.push(es); }
 }
 function startPlay(T) {
   ctx.resume();
@@ -1571,7 +1901,7 @@ function startPlay(T) {
     if (off >= 0) { if (off < beat.buffer.duration) s.start(w0, off); } else s.start(w0 + (-off) / st.rate, 0);
     liveSrcs.push(s);
   }
-  for (const t of project.tracks) for (const c of t.clips) scheduleClip(ctx, A.chains[t.id].input, c, t, T, w0, st.rate, liveSrcs);
+  for (const t of project.tracks) for (const c of t.clips) scheduleClip(ctx, A.chains[t.id].input, c, t, T, w0, st.rate, liveSrcs, A.chains[t.id]);
   startSched(); updateTransportUI(); wake();
 }
 function pause() {
@@ -1830,32 +2160,34 @@ function finishRec() {
   const r = rec; rec = null; if (!r) return;
   const sr = r.sr, L = latency();
   const fP = Math.round((r.punchT - r.Tstart + r.startCtx + L) * sr);
-  let lastFrame = 0; r.chunks.forEach(c => { lastFrame = Math.max(lastFrame, c.frame + c.data.length); });
+  let lastFrame = 0, firstFrame = Infinity; r.chunks.forEach(c => { lastFrame = Math.max(lastFrame, c.frame + c.data.length); firstFrame = Math.min(firstFrame, c.frame); });
   const fEnd = Math.min(lastFrame, Math.round((r.stopT - r.Tstart + r.startCtx + L) * sr));
-  const n = fEnd - fP;
-  if (n < sr * 0.25) { toast('Take byl moc krátký, nic jsem neuložil.'); updateTransportUI(); return; }
+  // keep up to 1.5 s of the count-in before the punch: room tone, the clean-up learns the room's noise from it
+  const fS = Math.min(fP, Math.max(isFinite(firstFrame) ? firstFrame : fP, fP - Math.round(sr * 1.5), Math.round((r.startCtx + L) * sr)));   // never after the punch: the take must stay exactly in time
+  const pre = Math.max(0, fP - fS), n = fEnd - fS;
+  if (n - pre < sr * 0.25) { toast('Take byl moc krátký, nic jsem neuložil.'); updateTransportUI(); return; }
   const data = new Float32Array(n);
   for (const c of r.chunks) {
-    const a = c.frame - fP;
+    const a = c.frame - fS;
     if (a >= n || a + c.data.length <= 0) continue;
     const s0 = Math.max(0, -a), e0 = Math.min(c.data.length, n - a);
     data.set(c.data.subarray(s0, e0), a + s0);
   }
-  let peak = 0; for (let i = 0; i < n; i += 8) { const v = Math.abs(data[i]); if (v > peak) peak = v; }
+  let peak = 0; for (let i = pre; i < n; i += 8) { const v = Math.abs(data[i]); if (v > peak) peak = v; }
   const buf = ctx.createBuffer(1, n, sr); buf.copyToChannel(data, 0);
-  const id = newId(); registerBuffer(id, buf); saveBuffer(id, buf);
+  const id = newId(); registerBuffer(id, buf, pre / sr); saveBuffer(id, buf, pre / sr);
   const t = trackById(r.track);
   pushUndo();
-  cutRegion(t, r.punchT, r.punchT + n / sr);
+  cutRegion(t, r.punchT, r.punchT + (n - pre) / sr);
   t.takeNo = (t.takeNo || 0) + 1;
-  const clip = { id: newId(), buf: id, start: r.punchT, off: 0, dur: n / sr, gainDb: 0, name: 'Take ' + t.takeNo };
+  const clip = { id: newId(), buf: id, start: r.punchT, off: pre / sr, dur: (n - pre) / sr, gainDb: 0, name: 'Take ' + t.takeNo };
   t.clips.push(clip); t.clips.sort((a, b) => a.start - b.start);
   project.sel = { track: t.id, clip: clip.id };
   changed(false);
   processTrack(t, false);
   if (peak < 0.02) toast('Take je skoro potichu. Zkontroluj mikrofon a vstupní zisk.', 'warn');
   else if (peak > 0.98) toast('Take praská (moc nahlas). Sniž vstupní zisk a nahraj znovu.', 'warn');
-  else toast(`${t.name}: ${clip.name} uložen (${(n / sr).toFixed(1).replace('.', ',')} s).`, 'ok');
+  else toast(`${t.name}: ${clip.name} uložen (${((n - pre) / sr).toFixed(1).replace('.', ',')} s). Tip: Efekty → Profi zvuk.`, 'ok', 4500);
 }
 function cutRegion(t, a, b) {
   const out = [];
@@ -2322,35 +2654,45 @@ function showTab(id) {
   if (id === 'song') renderSongPane();
   if (id === 'mix') renderMixPane();
 }
+const pctFmt = v => Math.round(v * 100) + ' %';
 const FX_UI = [
+  { mod: 'Čištění nahrávky', key: 'clean.on', note: 'Běží přímo na nahrávce (pár sekund po změně). Šum se učí z ticha při odpočtu před takem. Sykavky ztlumí jen S, Š, C a jen když vyčnívají.', ctl: [
+    { k: 'clean.nr', label: 'Odšumění', type: 'range', min: 0, max: 1, step: 0.01, fmt: v => v < 0.02 ? 'vyp.' : 'šum −' + Math.round(6 + 16 * v) + ' dB' },
+    { k: 'deess', label: 'Sykavky', type: 'range', min: 0, max: 1, step: 0.01, fmt: v => v < 0.02 ? 'vyp.' : 'až −' + Math.round(3 + 9 * v) + ' dB' },
+    { k: 'clean.res', label: 'Rezonance', type: 'range', min: 0, max: 1, step: 0.01, fmt: v => v < 0.02 ? 'vyp.' : pctFmt(v) },
+    { k: 'clean.rider', label: 'Vyrovnání', type: 'range', min: 0, max: 1, step: 0.01, fmt: v => v < 0.02 ? 'vyp.' : pctFmt(v) },
+    { k: 'clean.plos', label: 'Ploziva P, B', type: 'check' },
+    { k: 'clean.click', label: 'Lupance', type: 'check' },
+    { k: 'gate', label: 'Ztišit pauzy', type: 'check' } ] },
   { mod: 'Autotune', key: 'tune.on', note: 'Výsledek uslyšíš po dopočítání (pár sekund).', ctl: [
     { k: 'tune.scale', label: 'Stupnice', type: 'select', opts: [['song', 'Tónina písně'], ['songpent', 'Pentatonika písně (robot)'], ['chrom', 'Všechny tóny']] },
     { k: 'tune.speed', label: 'Rychlost', type: 'range', min: 0, max: 1, step: 0.01, fmt: v => v < 0.05 ? 'robot' : v < 0.35 ? 'rychlá' : 'přiroz.' },
-    { k: 'tune.amount', label: 'Síla', type: 'range', min: 0, max: 1, step: 0.01, fmt: v => Math.round(v * 100) + ' %' } ] },
+    { k: 'tune.amount', label: 'Síla', type: 'range', min: 0, max: 1, step: 0.01, fmt: pctFmt } ] },
   { mod: 'Výška hlasu', ctl: [ { k: 'shift', label: 'Posun', type: 'range', min: -12, max: 12, step: 1, fmt: v => (v > 0 ? '+' : '') + v + ' pt' } ], note: 'Dolů = démon, nahoru = chipmunk. Tempo zůstane.' },
-  { mod: 'Čistota', ctl: [
-    { k: 'gate', label: 'Odšumit pauzy', type: 'check' },
-    { k: 'deess', label: 'Sykavky', type: 'range', min: 0, max: 1, step: 0.01, fmt: v => v < 0.02 ? 'vyp.' : '−' + Math.round(v * 9) + ' dB' },
+  { mod: 'Barva hlasu', ctl: [
+    { k: 'meqAmt', label: 'Profi barva', type: 'range', min: 0, max: 1, step: 0.01, fmt: pctFmt },
     { k: 'hp.on', label: 'Ořez basů', type: 'check' }, { k: 'hp.f', label: 'Od', type: 'range', min: 40, max: 300, step: 5, fmt: v => v + ' Hz' },
-    { k: 'tel', label: 'Telefon', type: 'check' } ], note: 'Odšumění ztiší šum a dechy mezi řádky. Sykavky zjemní ostrá S a Š.' },
-  { mod: 'Ekvalizér', ctl: [
     { k: 'eq.low', label: 'Basy', type: 'range', min: -12, max: 12, step: 0.5, fmt: v => (v > 0 ? '+' : '') + v + ' dB' },
     { k: 'eq.mid', label: 'Čitelnost', type: 'range', min: -12, max: 12, step: 0.5, fmt: v => (v > 0 ? '+' : '') + v + ' dB' },
-    { k: 'eq.air', label: 'Vzduch', type: 'range', min: -12, max: 12, step: 0.5, fmt: v => (v > 0 ? '+' : '') + v + ' dB' } ] },
-  { mod: 'Kompresor', key: 'comp.on', ctl: [ { k: 'comp.amt', label: 'Síla', type: 'range', min: 0, max: 1, step: 0.01, fmt: v => Math.round(v * 100) + ' %' } ], note: 'Srovná hlasité a tiché části, hlas víc „sedí“ v beatu.' },
-  { mod: 'Saturace', ctl: [ { k: 'sat', label: 'Špína', type: 'range', min: 0, max: 1, step: 0.01, fmt: v => Math.round(v * 100) + ' %' } ] },
+    { k: 'eq.air', label: 'Vzduch', type: 'range', min: -12, max: 12, step: 0.5, fmt: v => (v > 0 ? '+' : '') + v + ' dB' },
+    { k: 'tel', label: 'Telefon', type: 'check' } ], note: 'Profi barva je EQ, který asistent Profi zvuk nastaví podle tvého hlasu a mikrofonu. Basy, čitelnost a vzduch jsou tvoje doladění navíc.' },
+  { mod: 'Komprese', key: 'comp.on', ctl: [ { k: 'comp.amt', label: 'Síla', type: 'range', min: 0, max: 1, step: 0.01, fmt: pctFmt } ], note: 'Dva kompresory za sebou jako ve studiu: rychlý chytá špičky, pomalý drží hlas v jedné hladině.' },
+  { mod: 'Lesk a šířka', ctl: [
+    { k: 'sat', label: 'Saturace', type: 'range', min: 0, max: 1, step: 0.01, fmt: pctFmt },
+    { k: 'excite', label: 'Vzduch', type: 'range', min: 0, max: 1, step: 0.01, fmt: pctFmt },
+    { k: 'dbl', label: 'Zdvojení', type: 'range', min: 0, max: 1, step: 0.01, fmt: v => v < 0.02 ? 'vyp.' : pctFmt(v) } ], note: 'Vzduch = jemný lesk v nejvyšších výškách. Zdvojení = dvě kopie hlasu do stran, hlas se rozšíří (hodí se na hook a ad-liby).' },
   { mod: 'Delay', ctl: [
-    { k: 'dly.amt', label: 'Množství', type: 'range', min: 0, max: 0.8, step: 0.01, fmt: v => Math.round(v * 100) + ' %' },
+    { k: 'dly.amt', label: 'Množství', type: 'range', min: 0, max: 0.8, step: 0.01, fmt: pctFmt },
     { k: 'dly.time', label: 'Rytmus', type: 'select', opts: [['1/8', 'osminy'], ['3/16', 'tečkované osminy'], ['1/4', 'čtvrtky'], ['1/2', 'půlky']] },
-    { k: 'dly.fb', label: 'Opakování', type: 'range', min: 0, max: 0.85, step: 0.01, fmt: v => Math.round(v * 100) + ' %' } ] },
+    { k: 'dly.fb', label: 'Opakování', type: 'range', min: 0, max: 0.85, step: 0.01, fmt: pctFmt } ], note: 'Ozvěny jdou do stran a jsou v nich ořezané basy i ostré výšky, takže nezamazávají text.' },
   { mod: 'Dozvuk', ctl: [
-    { k: 'rev.amt', label: 'Množství', type: 'range', min: 0, max: 0.9, step: 0.01, fmt: v => Math.round(v * 100) + ' %' },
-    { k: 'rev.size', label: 'Prostor', type: 'select', opts: [['room', 'Pokoj'], ['studio', 'Studio'], ['hall', 'Hala']] } ] },
+    { k: 'rev.amt', label: 'Množství', type: 'range', min: 0, max: 0.9, step: 0.01, fmt: pctFmt },
+    { k: 'rev.size', label: 'Prostor', type: 'select', opts: [['room', 'Pokoj'], ['studio', 'Plate (studio)'], ['hall', 'Hala']] } ] },
+  { mod: 'Efekty uhýbají', ctl: [ { k: 'duck', label: 'Při rapu', type: 'range', min: 0, max: 0.85, step: 0.01, fmt: v => v < 0.02 ? 'vyp.' : '−' + Math.round(-20 * Math.log10(1 - v)) + ' dB' } ], note: 'Delay a dozvuk se ztiší, když rapuješ, a rozezní se v pauzách. Hlas zůstane suchý a čitelný, efekt je slyšet mezi řádky.' },
   { mod: 'Stopa', ctl: [
     { k: 'vol', label: 'Hlasitost', type: 'range', min: 0, max: 1.5, step: 0.01, fmt: v => v <= 0.001 ? '−∞' : (linToDb(v) > 0 ? '+' : '') + linToDb(v).toFixed(1) + ' dB' },
     { k: 'pan', label: 'Panorama', type: 'range', min: -1, max: 1, step: 0.01, fmt: v => Math.abs(v) < 0.02 ? 'střed' : (v < 0 ? 'L ' : 'P ') + Math.round(Math.abs(v) * 100) } ] }
-];
-const getP = (o, p) => p.split('.').reduce((a, k) => a[k], o);
+];const getP = (o, p) => p.split('.').reduce((a, k) => a[k], o);
 const setP = (o, p, v) => { const ks = p.split('.'); const last = ks.pop(); ks.reduce((a, k) => a[k], o)[last] = v; };
 let procTimer = null;
 function renderFxPane() {
@@ -2358,6 +2700,7 @@ function renderFxPane() {
   let h = `<div class="trk-pick">${project.tracks.map(z => `<button type="button" data-pick="${z.id}" class="${z.id === t.id ? 'on' : ''}" style="--c:${z.color}">${esc(z.name)}</button>`).join('')}</div>`;
   h += `<div class="fx-head"><span class="dot" style="background:${t.color}"></span><b>${esc(t.name)}</b><span class="busy" id="fxBusy" ${procBusy ? '' : 'hidden'}>počítám…</span></div>`;
   h += `<div class="presets">${PRESETS.map(p => `<button type="button" data-preset="${p.id}" class="${t.preset === p.id ? 'on' : ''}">${esc(p.name)}</button>`).join('')}</div>`;
+  h += proPaneHTML(t);
   FX_UI.forEach((m, mi) => {
     const on = m.key ? getP(fx, m.key) : true;
     h += `<div class="mod${on ? '' : ' off'}"><div class="mod-h"><b>${esc(m.mod)}</b>${m.key ? `<span class="sw"><input type="checkbox" data-k="${m.key}" ${on ? 'checked' : ''} aria-label="${esc(m.mod)}"><span></span></span>` : ''}</div>`;
@@ -2376,7 +2719,12 @@ function renderFxPane() {
 $('pane-fx').addEventListener('click', e => {
   const pick = e.target.closest('[data-pick]'); if (pick) { selectTrack(pick.dataset.pick); return; }
   const pr = e.target.closest('[data-preset]');
-  if (pr) { const t = selTrack(), p = presetById(pr.dataset.preset); t.fx = clone(p.fx); t.preset = p.id; A.chains[t.id].set(t.fx); renderFxPane(); saveSoon(); processTrack(t, true); toast(`${t.name}: ${p.name}`, 'ok', 1600); return; }
+  if (pr) { const t = selTrack(), p = presetById(pr.dataset.preset);
+    // a preset is a style; what the assistant measured about the recording itself (clean-up, tone EQ, de-esser, low cut) stays
+    const keep = t.pro ? clone({ clean: t.fx.clean, meq: t.fx.meq, meqAmt: t.fx.meqAmt, deess: t.fx.deess, hp: t.fx.hp }) : null;
+    t.fx = clone(p.fx); if (keep) { if (p.id === 'phone') delete keep.hp; Object.assign(t.fx, keep); } t.preset = p.id; A.chains[t.id].set(t.fx); renderFxPane(); saveSoon(); processTrack(t, true); toast(`${t.name}: ${p.name}`, 'ok', 1600); return; }
+  const ab = e.target.closest('[data-ab]'); if (ab) { setAB(ab.dataset.ab === 'raw'); return; }
+  if (e.target.id === 'proGo' || e.target.id === 'proAll') { runPro(e.target.id === 'proAll'); return; }
   if (e.target.id === 'fxAll') { const src = selTrack(); project.tracks.forEach(t => { if (t !== src) { t.fx = clone(src.fx); t.preset = src.preset; A.chains[t.id].set(t.fx); processTrack(t, true); } }); saveSoon(); toast('Efekty zkopírované na všechny stopy.', 'ok'); }
 });
 $('pane-fx').addEventListener('input', e => {
@@ -2387,8 +2735,163 @@ $('pane-fx').addEventListener('input', e => {
   if (e.target.type === 'range') { const spec = FX_UI.flatMap(m => m.ctl).find(c => c.k === k); const o = e.target.parentElement.querySelector('output'); if (spec && o) o.textContent = spec.fmt(v); }
   if (e.target.type === 'checkbox' && e.target.closest('.mod-h')) e.target.closest('.mod').classList.toggle('off', !v);
   A.chains[t.id].set(t.fx); saveSoon();
-  if (k.startsWith('tune') || k === 'shift' || k === 'gate') { clearTimeout(procTimer); procTimer = setTimeout(() => processTrack(t, true), 450); tlDirty = true; }
+  if (k.startsWith('tune') || k === 'shift' || k === 'gate' || k.startsWith('clean') || k === 'deess') { clearTimeout(procTimer); procTimer = setTimeout(() => processTrack(t, true), 450); tlDirty = true; }
 });
+
+/* =====================================================================
+   12a. PROFI ZVUK: measure the takes, set the whole chain like a mix engineer, report before / after
+   ===================================================================== */
+/* target: long-term 1/3-octave spectrum of a finished, mixed rap vocal (relative to 500 Hz-2 kHz).
+   Built from average male speech plus the moves a mix engineer makes: high-pass, less 250-500 Hz box, more presence and air. */
+const PRO_TARGET = { 80: -9, 100: -5, 125: -2, 160: 1, 200: 2.5, 250: 3.5, 315: 3.8, 400: 3.8, 500: 3.5, 630: 2.8, 800: 1.5, 1000: 0, 1250: -1.2, 1600: -2.6, 2000: -4, 2500: -4.6, 3150: -5, 4000: -6.5, 5000: -8, 6300: -10, 8000: -12.5, 10000: -14, 12500: -17, 16000: -23 };
+const ROLE_FX = {
+  lead: { comp: 0.6, excite: 0.14, dbl: 0, duck: 0.6 },
+  dbl: { comp: 0.72, excite: 0.1, dbl: 0, duck: 0.6 },
+  adl: { comp: 0.62, excite: 0.2, dbl: 0.35, duck: 0.45 },
+  mel: { comp: 0.55, excite: 0.18, dbl: 0.22, duck: 0.55 }
+};
+const fmtNum = (v, d = 1) => (+v).toFixed(d).replace('.', ',').replace(/^-/, '−');
+const fmtHz = f => f >= 1000 ? fmtNum(f / 1000, f >= 10000 ? 0 : 1) + ' kHz' : Math.round(f) + ' Hz';
+function normBands(centers, bands) {
+  const ref = centers.map((c, i) => c >= 500 && c <= 2000 ? bands[i] : null).filter(v => v != null), m = ref.reduce((a, b) => a + b, 0) / Math.max(1, ref.length);
+  return bands.map(v => v - m);
+}
+/* least-squares fit of the 8 EQ bands (exact WebAudio responses) so that measured + EQ ≈ target */
+function fitMeq(centers, measured) {
+  const fr = Float32Array.from(centers), tgt = normBands(centers, centers.map(c => PRO_TARGET[c])), M = normBands(centers, measured);
+  const W = centers.map(c => c < 110 || c > 12000 ? 0.35 : 1), D = centers.map((c, i) => clamp(tgt[i] - M[i], -9, 9));
+  const B = MEQ.map(([type, f, q]) => { const b = bq(ctx, type, f, q); b.gain.value = 6; const mag = new Float32Array(fr.length), ph = new Float32Array(fr.length); b.getFrequencyResponse(fr, mag, ph); return Array.from(mag, m => 20 * Math.log10(m) / 6); });
+  const J = MEQ.length, A2 = Array.from({ length: J }, () => new Float64Array(J + 1));
+  for (let a = 0; a < J; a++) { for (let b = 0; b < J; b++) { let s = 0; for (let i = 0; i < fr.length; i++) s += W[i] * B[a][i] * B[b][i]; A2[a][b] = s + (a === b ? 0.6 : 0); } let r = 0; for (let i = 0; i < fr.length; i++) r += W[i] * B[a][i] * D[i]; A2[a][J] = r; }
+  for (let c = 0; c < J; c++) { let pv = c; for (let r = c + 1; r < J; r++) if (Math.abs(A2[r][c]) > Math.abs(A2[pv][c])) pv = r; [A2[c], A2[pv]] = [A2[pv], A2[c]]; for (let r = 0; r < J; r++) if (r !== c) { const k = A2[r][c] / A2[c][c]; for (let q = c; q <= J; q++) A2[r][q] -= k * A2[c][q]; } }
+  const lim = [[-6, 3], [-5, 4], [-6, 3], [-5, 3], [-4, 4], [-4, 5], [-4, 6], [-3, 6]];
+  const g = A2.map((row, i) => clamp(0.85 * row[J] / row[i], lim[i][0], lim[i][1]));
+  const after = M.map((v, i) => v + g.reduce((s, gj, j) => s + gj * B[j][i], 0));
+  const dev = arr => Math.sqrt(arr.reduce((s, v, i) => s + W[i] * Math.pow(v - tgt[i], 2), 0) / W.reduce((a, b) => a + b, 0));
+  return { g: g.map(v => +v.toFixed(1)), before: dev(M), after: dev(after), tgt, M, Mafter: after };
+}
+function aggregate(list) {
+  const ok = list.filter(a => a && a.voicedFrames > 0); if (!ok.length) return null;
+  const w = ok.map(a => a.voicedFrames), W = w.reduce((a, b) => a + b, 0), avg = k => ok.reduce((s, a, i) => s + a[k] * w[i], 0) / W;
+  const bands = ok[0].bands.map((_, j) => 10 * Math.log10(ok.reduce((s, a, i) => s + Math.pow(10, a.bands[j] / 10) * w[i], 0) / W + 1e-20));
+  return { centers: ok[0].centers, bands, peakDb: Math.max(...ok.map(a => a.peakDb)), clipped: ok.reduce((s, a) => s + a.clipped, 0), floorDb: avg('floorDb'), voicedDb: avg('voicedDb'), spread: avg('spread'),
+    ratioMed: avg('ratioMed'), ratioP95: avg('ratioP95'), clicks: ok.reduce((s, a) => s + a.clicks, 0), plosives: ok.reduce((s, a) => s + a.plosives, 0), f0: avg('f0'), dur: ok.reduce((s, a) => s + a.dur, 0),
+    res: ok.flatMap(a => a.res).sort((a, b) => b[1] - a[1]).slice(0, 3) };
+}
+/* timing: syllable onsets of the take vs where the lyrics put them; a whole-clip shift when the take is consistently early or late */
+function clipTiming(clip, onsetsBuf) {
+  const a = clip.start, b = clip.start + clip.dur, on = onsetsBuf.map(o => clip.start + (o - clip.off)).filter(x => x >= a && x <= b);
+  if (on.length < 6) return null;
+  const exp = []; for (const L of LINES) { if (L.t0 + LINE < a || L.t0 > b) continue; for (const s of L.syl) { if (s.ad) continue; const x = L.t0 + s.u0 * U; if (x >= a + 0.05 && x <= b - 0.05) exp.push(x); } }
+  if (exp.length < 8) return null;
+  const offs = []; let j = 0;
+  for (const x of exp) { while (j + 1 < on.length && Math.abs(on[j + 1] - x) <= Math.abs(on[j] - x)) j++; const d = on[j] - x; if (Math.abs(d) <= 0.11) offs.push(d); }
+  if (offs.length < Math.max(6, exp.length * 0.35)) return null;
+  const med = offs.slice().sort((x, y) => x - y)[offs.length >> 1], spread = offs.map(d => Math.abs(d - med)).sort((x, y) => x - y)[Math.floor(offs.length * 0.75)];
+  return { med, spread, n: offs.length, of: exp.length };
+}
+function setAB(raw) {
+  if (AB.raw === raw) return;
+  AB.raw = raw;
+  project.tracks.forEach(t => A.chains[t.id] && A.chains[t.id].set(t.fx)); applyMix();
+  document.querySelectorAll('#abSeg button').forEach(b => b.classList.toggle('on', (b.dataset.ab === 'raw') === raw));
+  $('abNote') && ($('abNote').textContent = raw ? 'Hraje surová nahrávka z mikrofonu, bez čištění a efektů.' : 'Hraje profi zvuk.');
+  if (!raw) project.tracks.forEach(t => processTrack(t, false));
+  if (st.playing && !st.recording) startPlay(tNow());
+}
+function proPaneHTML(t) {
+  const r = t.pro, has = t.clips.length > 0;
+  let h = `<div class="mod pro"><div class="mod-h"><b>Profi zvuk</b><small>asistent</small></div>`;
+  h += `<p class="note">Změří tvoje takes: hladinu, šum, lupance, ploziva, sykavky, rezonance, vyrovnanost, barvu hlasu a časování. Pak nastaví čištění, EQ, kompresi a efekty jako zvukař ve studiu.</p>`;
+  h += `<div class="btnrow"><button type="button" class="btn amber" id="proGo" ${has ? '' : 'disabled'}>Udělat profi zvuk</button><button type="button" id="proAll">Všechny stopy</button></div>`;
+  h += `<div class="ab"><span>Porovnat</span><div class="seg" id="abSeg"><button type="button" data-ab="raw" class="${AB.raw ? 'on' : ''}">Před</button><button type="button" data-ab="pro" class="${AB.raw ? '' : 'on'}">Po</button></div></div><p class="note" id="abNote">${AB.raw ? 'Hraje surová nahrávka z mikrofonu, bez čištění a efektů.' : 'Přepni na Před a uslyšíš, jak to znělo z mikrofonu.'}</p>`;
+  h += `<div id="proRep">${r ? proReportHTML(r) : has ? '' : '<p class="note">Nejdřív do téhle stopy něco nahraj.</p>'}</div></div>`;
+  return h;
+}
+function proReportHTML(r) {
+  const row = (ok, name, val) => `<li class="${ok === 2 ? 'bad' : ok === 1 ? 'warn' : 'ok'}"><b>${name}</b><span>${val}</span></li>`;
+  let h = `<ul class="rep">${r.items.map(i => row(i[0], i[1], i[2])).join('')}</ul>`;
+  if (r.chart) h += toneChart(r.chart);
+  return h;
+}
+/* the tone chart: measured (grey), after the EQ (amber), target (dashed) */
+function toneChart(c) {
+  const W = 300, H = 120, x = f => 24 + (Math.log2(f / 80) / Math.log2(16000 / 80)) * (W - 32), y = v => 14 + (12 - clamp(v, -30, 12)) * (H - 30) / 42;
+  const path = arr => arr.map((v, i) => `${i ? 'L' : 'M'}${x(c.f[i]).toFixed(1)},${y(v).toFixed(1)}`).join('');
+  const grid = [100, 1000, 10000].map(f => `<line x1="${x(f)}" x2="${x(f)}" y1="10" y2="${H - 14}" class="g"/><text x="${x(f)}" y="${H - 3}" text-anchor="middle">${fmtHz(f)}</text>`).join('');
+  return `<figure class="tone"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Barva hlasu před a po úpravě proti profi vokálu">${grid}<path d="${path(c.tgt)}" class="t"/><path d="${path(c.M)}" class="m"/><path d="${path(c.A)}" class="a"/></svg>
+    <figcaption><i class="m"></i>tvoje nahrávka <i class="a"></i>po úpravě <i class="t"></i>profi vokál</figcaption></figure>`;
+}
+let proBusy = false;
+async function runPro(all) {
+  if (proBusy || st.recording) return;
+  const tracks = all ? project.tracks.filter(t => t.clips.length) : [selTrack()].filter(t => t.clips.length);
+  if (!tracks.length) { toast('Zatím není co zpracovat: nejdřív nahraj take.', 'warn'); return; }
+  proBusy = true; setAB(false);
+  const b = $('proGo'); if (b) { b.disabled = true; b.textContent = 'Měřím a ladím…'; }
+  let undoPushed = false;
+  try {
+    for (const t of tracks) {
+      if (b) b.textContent = `Měřím: ${t.name}…`;
+      const res = await proSound(t, () => { if (!undoPushed) { pushUndo(); undoPushed = true; } });
+      if (res) t.pro = res;
+    }
+    saveSoon(); changed(true); renderFxPane();
+    toast(all ? 'Profi zvuk nastavený na všech stopách. Přepínej Před / Po a poslouchej.' : `${tracks[0].name}: profi zvuk nastavený. Přepínej Před / Po a poslouchej.`, 'ok', 6000);
+    if (st.playing && !st.recording) startPlay(tNow());
+  } catch (e) { console.error(e); toast('Profi zvuk se nepovedl: ' + e.message, 'warn', 8000); renderFxPane(); }
+  proBusy = false;
+}
+async function proSound(t, beforeShift) {
+  const ids = [...new Set(t.clips.map(c => c.buf))].filter(id => BUFS.has(id)); if (!ids.length) return null;
+  const raw = aggregate(await Promise.all(ids.map(id => analyzeTake(id)))); if (!raw) return null;
+  const fx = t.fx, role = ROLE_FX[t.id] || ROLE_FX.lead, snr = raw.voicedDb - raw.floorDb;
+  // 1) clean-up, from what the takes need
+  fx.clean = { on: true, nr: snr > 58 ? 0.3 : snr > 48 ? 0.45 : snr > 38 ? 0.65 : 0.85, click: true, plos: true, res: 0.6, rider: raw.spread > 12 ? 0.65 : raw.spread > 8 ? 0.5 : 0.35 };
+  fx.deess = clamp(0.35 + (raw.ratioP95 - raw.ratioMed - 8) * 0.05, 0.3, 0.8);
+  fx.gate = true;
+  fx.hp = { on: true, f: clamp(Math.round((raw.f0 > 50 ? raw.f0 * 0.7 : 85) / 5) * 5, 60, t.id === 'adl' || t.id === 'dbl' ? 160 : 120) };
+  if (t.id === 'adl' || t.id === 'dbl') fx.hp.f = Math.max(fx.hp.f, 150);
+  fx.comp = { on: true, amt: role.comp }; fx.excite = role.excite; fx.dbl = role.dbl; fx.duck = role.duck;
+  fx.eq = { low: 0, mid: 0, air: 0 }; fx.meq = MEQ.map(() => 0); fx.meqAmt = 1; fx.tel = false;
+  if (fx.sat > 0.25) fx.sat = 0.15;
+  t.preset = 'custom';
+  A.chains[t.id].set(fx);
+  // 2) process the takes and measure the cleaned result
+  const key = procKey(fx);
+  procBusy++; updateBusy();
+  try { await Promise.all(ids.map(id => processBuffer(id, fx))); } finally { procBusy--; updateBusy(); }
+  const infos = ids.map(id => (BUFS.get(id).info || {})[key] || {});
+  const cl = await Promise.all(ids.map(id => analyzeTake(id, key)));
+  const after = aggregate(cl) || raw;
+  // 3) tone: EQ toward the pro vocal curve, fitted on the cleaned takes
+  const eq = fitMeq(after.centers, after.bands);
+  fx.meq = eq.g; A.chains[t.id].set(fx);
+  // 4) timing: shift clips that are consistently early or late
+  const tim = [];
+  ids.forEach((id, i) => { const on = cl[i] && cl[i].onsets; if (!on) return; t.clips.filter(c => c.buf === id).forEach(c => { const r = clipTiming(c, on); if (!r) return; tim.push(r); if (Math.abs(r.med) >= 0.012) { beforeShift(); c.start = Math.max(minT(), c.start - clamp(r.med, -0.09, 0.09)); r.shifted = true; } }); });
+  // 5) report
+  const sum = k => infos.reduce((s, i) => s + (i[k] || 0), 0), avgI = k => { const v = infos.map(i => i[k]).filter(x => x != null && isFinite(x)); return v.length ? v.reduce((a, b) => a + b, 0) / v.length : null; };
+  const items = [];
+  if (raw.clipped > 0) items.push([2, 'Nahrávka', `${raw.clipped}× přebuzená (špička ${fmtNum(raw.peakDb)} dBFS). Tohle se opravit nedá: sniž vstupní zisk a nahraj znovu.`]);
+  else if (raw.voicedDb < -38) items.push([1, 'Nahrávka', `Hodně potichu (hlas ${fmtNum(raw.voicedDb)} dBFS). Přidej zisk na mikrofonu, šum pak bude nižší.`]);
+  else items.push([0, 'Nahrávka', `Čistá hladina, špička ${fmtNum(raw.peakDb)} dBFS, nic nepřebuzené.`]);
+  const fb = avgI('floorBefore'), fa = avgI('floorAfter');
+  items.push([snr < 35 ? 1 : 0, 'Šum v pauzách', fb != null && fa != null ? `${fmtNum(fb)} → ${fmtNum(fa)} dB (odstup hlasu od šumu ${fmtNum(snr, 0)} dB${snr < 35 ? ', nahrávej dál od počítače a ventilátorů' : ''})` : 'beze změny']);
+  items.push([0, 'Lupance', sum('clicks') ? `${sum('clicks')} opraveno` : 'žádné']);
+  items.push([0, 'Ploziva (P, B)', sum('plosives') ? `${sum('plosives')} ztlumeno` : 'žádná rána do mikrofonu']);
+  items.push([0, 'Sykavky', sum('essFrames') ? `ztlumeno v ${fmtNum(sum('essFrames') / 1000)} s, průměrně o ${fmtNum(avgI('essAvgDb') || 0)} dB` : 'v pořádku']);
+  const rc = infos.flatMap(i => i.resCuts || []).sort((a, b) => b[1] - a[1]).slice(0, 3);
+  items.push([0, 'Rezonance', rc.length ? rc.map(([f, d]) => `−${fmtNum(d)} dB na ${fmtHz(f)}`).join(', ') : 'žádné výrazné']);
+  const sb = avgI('spreadBefore'), sa = avgI('spreadAfter');
+  items.push([0, 'Vyrovnání hlasitosti', sb != null && sa != null ? `rozptyl ${fmtNum(sb)} → ${fmtNum(sa)} dB` : 'beze změny']);
+  const moves = eq.g.map((g, i) => [g, MEQ[i][1]]).filter(([g]) => Math.abs(g) >= 1).sort((a, b) => Math.abs(b[0]) - Math.abs(a[0])).slice(0, 3).map(([g, f]) => `${g > 0 ? '+' : '−'}${fmtNum(Math.abs(g))} dB ${fmtHz(f)}`);
+  items.push([0, 'Barva hlasu', `odchylka od profi vokálu ${fmtNum(eq.before)} → ${fmtNum(eq.after)} dB${moves.length ? ' (' + moves.join(', ') + ')' : ''}`]);
+  items.push([0, 'Ořez basů', `od ${fx.hp.f} Hz${raw.f0 > 50 ? ` (tvůj hlas začíná kolem ${Math.round(raw.f0)} Hz)` : ''}`]);
+  if (tim.length) { const md = tim.reduce((s, r) => s + r.med, 0) / tim.length, sp = tim.reduce((s, r) => s + r.spread, 0) / tim.length, shifted = tim.filter(r => r.shifted).length;
+    items.push([sp > 0.06 ? 1 : 0, 'Časování', `${Math.abs(md) < 0.012 ? 'sedí na beat' : `bylo ${md > 0 ? 'pozadu' : 'napřed'} o ${Math.round(Math.abs(md) * 1000)} ms${shifted ? ', srovnáno' : ''}`}, rozptyl slabik ±${Math.round(sp * 1000)} ms${sp > 0.06 ? ' (dolaď v Písni tlačítkem Ťukat a nahraj znovu)' : ''}`]); }
+  return { at: Date.now(), items, chart: { f: eq.tgt.map((_, i) => after.centers[i]), tgt: eq.tgt, M: eq.M, A: eq.Mafter } };
+}
 
 /* mix */
 const mixMeters = [];
@@ -2396,11 +2899,14 @@ function renderMixPane() {
   const rows = [{ id: 'beat', name: 'Beat', sub: beat.buffer ? beat.name : 'vodicí', vol: project.beatVol, mute: project.beatMute, solo: null },
     ...project.tracks.map(t => ({ id: t.id, name: t.name, sub: `${t.clips.length} klip(ů)`, vol: t.fx.vol, mute: t.mute, solo: t.solo, color: t.color })),
     { id: 'master', name: 'Master', sub: 'celek + limiter', vol: project.master, mute: null, solo: null }];
-  $('pane-mix').innerHTML = '<h3>Mix</h3>' + rows.map(r => `<div class="strip" data-row="${r.id}"><span class="nm" ${r.color ? `style="color:${r.color}"` : ''}>${esc(r.name)}<small>${esc(r.sub)}</small></span><div class="faders"><input type="range" min="0" max="1.5" step="0.01" value="${r.vol}" data-vol aria-label="Hlasitost ${esc(r.name)}"><canvas width="200" height="6" data-meter></canvas></div>${r.mute === null ? '<span></span>' : `<button class="ms m${r.mute ? ' on' : ''}" type="button" data-mute>M</button>`}${r.solo === null ? '<span></span>' : `<button class="ms s${r.solo ? ' on' : ''}" type="button" data-solo>S</button>`}</div>`).join('') + '<button class="btn amber wide" type="button" id="autoMixBtn" style="margin-top:4px">Automaticky vyvážit hlas a beat</button><p class="note">Nastaví hlavní vokál nad beat, dabl a ad-liby pod něj. Jemné ladění každé stopy (EQ, kompresor, dozvuk…) je v záložce Efekty.</p>';
+  $('pane-mix').innerHTML = '<h3>Mix</h3>' + rows.map(r => `<div class="strip" data-row="${r.id}"><span class="nm" ${r.color ? `style="color:${r.color}"` : ''}>${esc(r.name)}<small>${esc(r.sub)}</small></span><div class="faders"><input type="range" min="0" max="1.5" step="0.01" value="${r.vol}" data-vol aria-label="Hlasitost ${esc(r.name)}"><canvas width="200" height="6" data-meter></canvas></div>${r.mute === null ? '<span></span>' : `<button class="ms m${r.mute ? ' on' : ''}" type="button" data-mute>M</button>`}${r.solo === null ? '<span></span>' : `<button class="ms s${r.solo ? ' on' : ''}" type="button" data-solo>S</button>`}</div>`).join('') + '<button class="btn amber wide" type="button" id="autoMixBtn" style="margin-top:4px">Automaticky vyvážit hlas a beat</button><p class="note">Nastaví hlavní vokál nad beat, dabl a ad-liby pod něj. Jemné ladění každé stopy (EQ, kompresor, dozvuk…) je v záložce Efekty.</p>' +
+    `<div class="mod"><div class="mod-h"><b>Místo pro hlas v beatu</b></div><div class="ctl"><label for="carveR">Hloubka</label><input type="range" id="carveR" min="0" max="1" step="0.01" value="${project.carve == null ? 0.5 : project.carve}"><output id="carveO">${carveLabel()}</output></div><p class="note">Když rapuješ, beat v pásmu čitelnosti řeči (kolem 2,8 kHz) o pár dB uhne, mimo text hraje celý. Hlas je pak slyšet i bez přidávání hlasitosti.</p></div>`;
   mixMeters.length = 0;
   document.querySelectorAll('#pane-mix .strip').forEach(s => { const id = s.dataset.row; mixMeters.push({ cv: s.querySelector('[data-meter]'), an: id === 'beat' ? A.beatAn : id === 'master' ? A.mAn : A.chains[id].an, hold: 0 }); });
 }
+const carveLabel = () => { const d = carveDepth(); return d < 0.01 ? 'vyp.' : '−' + fmtNum(-20 * Math.log10(1 - d)) + ' dB'; };
 $('pane-mix').addEventListener('input', e => {
+  if (e.target.id === 'carveR') { project.carve = +e.target.value; $('carveO').textContent = carveLabel(); applyMix(); saveSoon(); return; }
   if (!e.target.hasAttribute('data-vol')) return;
   const id = e.target.closest('.strip').dataset.row, v = +e.target.value;
   if (id === 'beat') project.beatVol = v; else if (id === 'master') project.master = v; else { const t = trackById(id); t.fx.vol = v; t.preset = 'custom'; A.chains[id].set(t.fx); }
@@ -2543,7 +3049,7 @@ async function openProject(p, keepUndo) {
   BUFS.clear(); if (!keepUndo) { undoStack.length = 0; redoStack.length = 0; }
   buildSong(); buildLyricDOM(); buildSetlist();   // DOM must match LINES/SECTIONS before the awaits below (render runs meanwhile)
   const ids = new Set(); project.tracks.forEach(t => t.clips.forEach(c => ids.add(c.buf)));
-  for (const id of ids) { try { const a = await IDB.get('audio', id); if (a) { const b = ctx.createBuffer(1, a.data.length, a.sr); b.copyToChannel(a.data, 0); registerBuffer(id, b); } } catch (e) { console.error(e); } }
+  for (const id of ids) { try { const a = await IDB.get('audio', id); if (a) { const b = ctx.createBuffer(1, a.data.length, a.sr); b.copyToChannel(a.data, 0); registerBuffer(id, b, a.pre || 0); } } catch (e) { console.error(e); } }
   project.tracks.forEach(t => { t.clips = t.clips.filter(c => BUFS.has(c.buf)); });
   let bt = null; try { bt = await IDB.get('kv', beatKey()); } catch (e) {}
   if (bt && bt.data) { try { await useBeat(bt.data, bt.name, bt.offset, true); } catch (e) { console.error(e); } }
@@ -2778,12 +3284,14 @@ async function renderJob(tracks, withBeat, t0, t1, sr) {
   const lim = oc.createDynamicsCompressor(); lim.threshold.value = -1.5; lim.knee.value = 0; lim.ratio.value = 20; lim.attack.value = 0.002; lim.release.value = 0.12;
   const soft = softClipStage(oc);
   master.connect(lim); lim.connect(soft.input); soft.output.connect(oc.destination);
+  let carveIn = null;
   if (withBeat && beat.buffer) {
-    const bg = oc.createGain(); bg.gain.value = project.beatVol; bg.connect(master);
-    const s = oc.createBufferSource(); s.buffer = beat.buffer; s.connect(bg);
+    const bIn = oc.createGain(), bg = oc.createGain(); bg.gain.value = project.beatVol; bIn.connect(bg); bg.connect(master);
+    const cv = carvePath(oc, bIn, bg); cv.inp.gain.value = AB.raw ? 0 : carveDepth(); carveIn = cv.inp;
+    const s = oc.createBufferSource(); s.buffer = beat.buffer; s.connect(bIn);
     const off = t0 + beat.offset; if (off >= 0) s.start(0, off); else s.start(-off, 0);
   }
-  for (const t of tracks) { const ch = buildChain(oc, t.fx, master, false); for (const c of t.clips) scheduleClip(oc, ch.input, c, t, t0, 0, 1, null); }
+  for (const t of tracks) { const ch = buildChain(oc, t.fx, master, false, carveIn, t.id); for (const c of t.clips) scheduleClip(oc, ch.input, c, t, t0, 0, 1, null, ch); }
   const out = await oc.startRendering();
   const keep = Math.min(out.length, Math.ceil((t1 - t0) * sr) + Math.round(sr * 0.05));
   if (keep >= out.length) return out;
@@ -2792,13 +3300,16 @@ async function renderJob(tracks, withBeat, t0, t1, sr) {
   return trimmed;
 }
 function normalizeBuf(b, db) { let m = 0; for (let c = 0; c < b.numberOfChannels; c++) { const d = b.getChannelData(c); for (let i = 0; i < d.length; i++) { const v = Math.abs(d[i]); if (v > m) m = v; } } if (m < 1e-5) return; const k = dbToLin(db) / m; for (let c = 0; c < b.numberOfChannels; c++) { const d = b.getChannelData(c); for (let i = 0; i < d.length; i++) d[i] *= k; } }
-function toWav(b) {
-  const nc = b.numberOfChannels, sr = b.sampleRate, n = b.length, ab = new ArrayBuffer(44 + n * nc * 2), v = new DataView(ab);
+/* WAV: 24 bit for the best quality, 16 bit with TPDF dither (quiet fades stay smooth instead of turning to grit) */
+function toWav(b, bits) {
+  const B = bits === 24 ? 3 : 2, nc = b.numberOfChannels, sr = b.sampleRate, n = b.length, ab = new ArrayBuffer(44 + n * nc * B), v = new DataView(ab);
   const ws = (o, s) => { for (let i = 0; i < s.length; i++) v.setUint8(o + i, s.charCodeAt(i)); };
-  ws(0, 'RIFF'); v.setUint32(4, 36 + n * nc * 2, true); ws(8, 'WAVE'); ws(12, 'fmt '); v.setUint32(16, 16, true); v.setUint16(20, 1, true); v.setUint16(22, nc, true);
-  v.setUint32(24, sr, true); v.setUint32(28, sr * nc * 2, true); v.setUint16(32, nc * 2, true); v.setUint16(34, 16, true); ws(36, 'data'); v.setUint32(40, n * nc * 2, true);
+  ws(0, 'RIFF'); v.setUint32(4, 36 + n * nc * B, true); ws(8, 'WAVE'); ws(12, 'fmt '); v.setUint32(16, 16, true); v.setUint16(20, 1, true); v.setUint16(22, nc, true);
+  v.setUint32(24, sr, true); v.setUint32(28, sr * nc * B, true); v.setUint16(32, nc * B, true); v.setUint16(34, B * 8, true); ws(36, 'data'); v.setUint32(40, n * nc * B, true);
   const chs = []; for (let c = 0; c < nc; c++) chs.push(b.getChannelData(c));
-  let o = 44; for (let i = 0; i < n; i++) for (let c = 0; c < nc; c++) { const s = clamp(chs[c][i], -1, 1); v.setInt16(o, s < 0 ? s * 0x8000 : s * 0x7FFF, true); o += 2; }
+  let o = 44;
+  if (B === 3) { for (let i = 0; i < n; i++) for (let c = 0; c < nc; c++) { const s = Math.round(clamp(chs[c][i], -1, 1) * 8388607); v.setUint8(o, s & 255); v.setUint8(o + 1, (s >> 8) & 255); v.setUint8(o + 2, (s >> 16) & 255); o += 3; } }
+  else for (let i = 0; i < n; i++) for (let c = 0; c < nc; c++) { const s = clamp(Math.round(chs[c][i] * 32767 + Math.random() - Math.random()), -32768, 32767); v.setInt16(o, s, true); o += 2; }
   return new Blob([ab], { type: 'audio/wav' });
 }
 function toI16(d) { const o = new Int16Array(d.length); for (let i = 0; i < d.length; i++) { const s = clamp(d[i], -1, 1); o[i] = s < 0 ? s * 0x8000 : s * 0x7FFF; } return o; }
@@ -2833,11 +3344,21 @@ function measureLufs(b) {
   const gated = abs.filter(v => L(v) > rel);
   return L(gated.reduce((a, v) => a + v, 0) / gated.length);
 }
+/* true-peak: the waveform between samples (what a DAC or an MP3 decoder rebuilds) can overshoot the samples; 4x oversampled check */
+const TP_TAPS = [0.25, 0.5, 0.75].map(f => { const w = []; let s = 0; for (let k = -3; k <= 4; k++) { const x = k - f, sinc = Math.abs(x) < 1e-9 ? 1 : Math.sin(Math.PI * x) / (Math.PI * x), win = 0.5 + 0.5 * Math.cos(Math.PI * x / 4.5); w.push(sinc * win); s += sinc * win; } return w.map(v => v / s); });
 function limitBuffer(b, ceilDb) {
   const ceil = dbToLin(ceilDb), sr = b.sampleRate, n = b.length, chs = []; for (let c = 0; c < b.numberOfChannels; c++) chs.push(b.getChannelData(c));
   const look = Math.max(1, Math.round(sr * 0.005)), relK = Math.exp(-1 / (sr * 0.06));
   const req = new Float32Array(n);
-  for (let i = 0; i < n; i++) { let p = 0; for (const d of chs) { const v = d[i] < 0 ? -d[i] : d[i]; if (v > p) p = v; } req[i] = p > ceil ? ceil / p : 1; }
+  for (let i = 0; i < n; i++) {
+    let p = 0;
+    for (const d of chs) {
+      let v = d[i] < 0 ? -d[i] : d[i];
+      if (i >= 3 && i < n - 4 && v > ceil * 0.7) for (const w of TP_TAPS) { let s = 0; for (let k = 0; k < 8; k++) s += d[i - 3 + k] * w[k]; s = s < 0 ? -s : s; if (s > v) v = s; }
+      if (v > p) p = v;
+    }
+    req[i] = p > ceil ? ceil / p : 1;
+  }
   const gmin = new Float32Array(n), dq = new Int32Array(n); let h = 0, t = 0;
   for (let i = n - 1; i >= 0; i--) { while (t > h && req[dq[t - 1]] >= req[i]) t--; dq[t++] = i; while (dq[h] > i + look) h++; gmin[i] = req[dq[h]]; }
   let g = 1;
@@ -2869,6 +3390,7 @@ function activeDb(b, a0, a1) {
   return 10 * Math.log10(top.reduce((x, y) => x + y, 0) / top.length);
 }
 async function autoMix() {
+  setAB(false);
   if (!beat.buffer) { toast('Nejdřív nahraj originální beat (záložka Beat).', 'warn'); return null; }
   const tr = project.tracks.filter(t => t.clips.length);
   if (!tr.length) { toast('Zatím nemáš nic nahraného.', 'warn'); return null; }
@@ -2890,6 +3412,7 @@ async function autoMix() {
 let xMast = '-9';
 document.querySelectorAll('#mastSeg button').forEach(b => b.addEventListener('click', () => { xMast = b.dataset.m; document.querySelectorAll('#mastSeg button').forEach(z => z.classList.toggle('on', z === b)); }));
 $('xGo').addEventListener('click', async () => {
+  setAB(false);   // never export the raw "before" by accident
   const what = document.querySelector('input[name=what]:checked').value;
   const base = ($('xName').value || 'Celej v černým').replace(/[\\/:*?"<>|]/g, '').trim() || 'Celej v černým';
   const voxTracks = project.tracks.filter(t => t.clips.length);
@@ -2916,7 +3439,7 @@ $('xGo').addEventListener('click', async () => {
       else limitBuffer(b, -1);
       if (what === 'mix' && $('trimX').checked) { b2 = trimLeadingSilence(b); if (b2 !== b) report += ` Ticho na začátku uříznuto (${((b.length - b2.length) / b.sampleRate).toFixed(1).replace('.', ',')} s).`; }
       $('xStatus').textContent = `Ukládám ${job.name}…`;
-      const blob = fmt === 'mp3' ? await toMp3(b2, p => { bar.style.width = ((baseP + span * (0.3 + 0.7 * p)) * 100) + '%'; }) : toWav(b2);
+      const blob = fmt === 'mp3' ? await toMp3(b2, p => { bar.style.width = ((baseP + span * (0.3 + 0.7 * p)) * 100) + '%'; }) : toWav(b2, 24);
       download(blob, job.name + (fmt === 'mp3' ? '.mp3' : '.wav'));
       bar.style.width = ((j + 1) / jobs.length * 100) + '%';
     }
